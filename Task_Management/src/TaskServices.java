@@ -59,6 +59,8 @@ public class TaskServices {
                 }
             }
         }
+
+        repository.rewriteFile();
         System.out.println("Tasks Sorted By Name");
     }
 
@@ -85,6 +87,7 @@ public class TaskServices {
             }
         }
 
+        repository.rewriteFile();
         System.out.println("Tasks Sorted By Priority (HIGH → MEDIUM → LOW)");
     }
 
@@ -128,6 +131,7 @@ public class TaskServices {
             }
         }
 
+        repository.rewriteFile();
         System.out.println("Tasks Sorted By Status (IN_PROGRESS → TO_DO → DONE)");
     }
 

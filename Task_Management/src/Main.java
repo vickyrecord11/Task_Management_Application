@@ -15,7 +15,7 @@ public class Main {
             System.out.println("5 Sort by Priority");
             System.out.println("6 Sort by Name");
             System.out.println("7 Sort by Status");
-            System.out.println("5 Exit");
+            System.out.println("8 Exit");
 
             int choice = sc.nextInt();
             sc.nextLine();
@@ -87,6 +87,8 @@ public class Main {
                 default:
                     System.out.println("Invalid choice");
             }
+
+            System.out.println("\n=============================\n");
         }
     }
 }

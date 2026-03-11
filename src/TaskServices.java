@@ -4,27 +4,31 @@ public class TaskServices {
 
     private TaskRepository repository = new TaskRepository();
 
-    public void createTask(String name, String description, String priority, String status) {
+    public void createTask(String name, String description, Priority priority, Status status) {
 
-        Task task = new Task(name, description, priority, status);
+        int id = repository.generateId();
+
+        Task task = new Task(id, name, description, priority, status);
 
         repository.addTask(task);
 
         System.out.println("Task Created Successfully");
     }
 
-    public void deleteTask(String name) {
+    public void deleteTask(int id) {
 
-        repository.deleteTask(name);
+        repository.deleteTask(id);
 
-        System.out.println("Task Deleted Successfully");
     }
 
-    public void updateTask(String name, String description, String priority, String status) {
+    public void updateTask(int id, String field, String newValue) {
 
-        repository.updateTask(name, description, priority, status);
+        repository.updateTask(id, field, newValue);
+    }
 
-        System.out.println("Task Updated Successfully");
+    public boolean taskExists(int id) {
+
+        return repository.taskExists(id);
     }
 
     public void viewTasks() {
@@ -91,17 +95,17 @@ public class TaskServices {
         System.out.println("Tasks Sorted By Priority (HIGH → MEDIUM → LOW)");
     }
 
-    private int getPriorityValue(String priority) {
+    private int getPriorityValue(Priority priority) {
 
-        if (priority.equalsIgnoreCase("HIGH")) {
+        if (priority == Priority.HIGH) {
             return 1;
         }
 
-        if (priority.equalsIgnoreCase("MEDIUM")) {
+        if (priority == Priority.MEDIUM) {
             return 2;
         }
 
-        if (priority.equalsIgnoreCase("LOW")) {
+        if (priority == Priority.LOW) {
             return 3;
         }
 
@@ -135,17 +139,17 @@ public class TaskServices {
         System.out.println("Tasks Sorted By Status (IN_PROGRESS → TO_DO → DONE)");
     }
 
-    private int getStatusValue(String status) {
+    private int getStatusValue(Status status) {
 
-        if (status.equalsIgnoreCase("IN_PROGRESS")) {
+        if (status == Status.IN_PROGRESS) {
             return 1;
         }
 
-        if (status.equalsIgnoreCase("TO_DO")) {
+        if (status == Status.TO_DO) {
             return 2;
         }
 
-        if (status.equalsIgnoreCase("DONE")) {
+        if (status == Status.DONE) {
             return 3;
         }
 

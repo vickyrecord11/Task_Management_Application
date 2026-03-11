@@ -1,15 +1,21 @@
 public class Task {
 
+    int id;
     String name;
     String description;
-    String priority;
-    String status;
+    Priority priority;
+    Status status;
 
-    Task(String name, String description, String priority, String status) {
+    Task(int id, String name, String description, Priority priority, Status status) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.priority = priority;
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -20,12 +26,16 @@ public class Task {
         return description;
     }
 
-    public String getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -36,16 +46,17 @@ public class Task {
         this.description = description;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
     public String toString() {
-        return "Name: " + name +
+        return "Id: " + id +
+                ", Name: " + name +
                 ", Description: " + description +
                 ", Priority: " + priority +
                 ", Status: " + status;

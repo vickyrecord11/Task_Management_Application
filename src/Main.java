@@ -30,10 +30,23 @@ public class Main {
                     String description = sc.nextLine();
 
                     System.out.println("Enter priority (HIGH/MEDIUM/LOW):");
-                    Priority priority = Priority.valueOf(sc.nextLine().toUpperCase());
+                    Priority priority;
+                    try {
+                        priority = Priority.valueOf(sc.nextLine().toUpperCase());
+                    } catch (Exception e) {
+                        System.out.println("Invalid Priority");
+                        return;
+                    }
 
                     System.out.println("Enter status (TO_DO/IN_PROGRESS/DONE):");
-                    Status status = Status.valueOf(sc.nextLine().toUpperCase());
+                    Status status;
+
+                    try {
+                        status = Status.valueOf(sc.nextLine().toUpperCase());
+                    } catch (Exception e) {
+                        System.out.println("Invalid Status");
+                        return;
+                    }
 
                     service.createTask(name, description, priority, status);
                     break;

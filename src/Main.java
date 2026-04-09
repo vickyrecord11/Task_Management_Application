@@ -5,17 +5,32 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        TaskServices service = new TaskServices();
+        System.out.println("Select Mode:");
+        System.out.println("1 MEMORY");
+        System.out.println("2 DISC");
+
+        int modeChoice = sc.nextInt();
+        sc.nextLine();
+
+        StorageMode mode = null;
+
+        if (modeChoice == 1) {
+            mode = StorageMode.MEMORY;
+        } else if( modeChoice == 2) {
+            mode = StorageMode.DISC;
+        } else{
+            System.out.println("Invalid choice");
+        }
+
+        TaskServices service = new TaskServices(mode);
 
         while (true) {
+
             System.out.println("1 Create Task");
             System.out.println("2 Delete Task");
             System.out.println("3 Update Task");
             System.out.println("4 View Tasks");
-            System.out.println("5 Sort by Priority");
-            System.out.println("6 Sort by Name");
-            System.out.println("7 Sort by Status");
-            System.out.println("8 Exit");
+            System.out.println("5 Exit");
 
             int choice = sc.nextInt();
             sc.nextLine();
@@ -35,17 +50,16 @@ public class Main {
                         priority = Priority.valueOf(sc.nextLine().toUpperCase());
                     } catch (Exception e) {
                         System.out.println("Invalid Priority");
-                        return;
+                        break;
                     }
 
                     System.out.println("Enter status (TO_DO/IN_PROGRESS/DONE):");
                     Status status;
-
                     try {
                         status = Status.valueOf(sc.nextLine().toUpperCase());
                     } catch (Exception e) {
                         System.out.println("Invalid Status");
-                        return;
+                        break;
                     }
 
                     service.createTask(name, description, priority, status);
@@ -54,6 +68,7 @@ public class Main {
                 case 2:
                     System.out.println("Enter task Id to delete:");
                     int deleteId = sc.nextInt();
+                    sc.nextLine();
 
                     service.deleteTask(deleteId);
                     break;
@@ -64,10 +79,10 @@ public class Main {
                     sc.nextLine();
 
                     if (!service.taskExists(updateId)) {
-
                         System.out.println("Invalid Task ID");
                         break;
                     }
+
                     System.out.println("What do you want to update?");
                     System.out.println("1 Name");
                     System.out.println("2 Description");
@@ -77,36 +92,21 @@ public class Main {
                     int fieldChoice = sc.nextInt();
                     sc.nextLine();
 
-                    String field = "";
+                    String field;
 
-                    switch (fieldChoice) {
-
-                        case 1:
-                            field = "name";
-                            break;
-
-                        case 2:
-                            field = "description";
-                            break;
-
-                        case 3:
-                            field = "priority";
-                            break;
-
-                        case 4:
-                            field = "status";
-                            break;
-
-                        default:
-                            System.out.println("Invalid choice");
-                            break;
+                    if (fieldChoice == 1) field = "name";
+                    else if (fieldChoice == 2) field = "description";
+                    else if (fieldChoice == 3) field = "priority";
+                    else if (fieldChoice == 4) field = "status";
+                    else {
+                        System.out.println("Invalid choice");
+                        break;
                     }
 
                     System.out.println("Enter new value:");
                     String newValue = sc.nextLine();
 
                     service.updateTask(updateId, field, newValue);
-
                     break;
 
                 case 4:
@@ -114,22 +114,8 @@ public class Main {
                     break;
 
                 case 5:
-                    service.sortByPriority();
-                    service.viewTasks();
-                    break;
-
-                case 6:
-                    service.sortByName();
-                    service.viewTasks();
-                    break;
-
-                case 7:
-                    service.sortByStatus();
-                    service.viewTasks();
-                    break;
-
-                case 8:
                     System.out.println("Exiting...");
+                    sc.close();
                     return;
 
                 default:

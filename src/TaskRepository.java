@@ -1,10 +1,13 @@
-import java.util.ArrayList;
 import java.io.*;
+import java.util.ArrayList;
 
 public class TaskRepository {
+
+    private final StorageMode mode;
+
     ArrayList<Task> tasks = new ArrayList<>();
+
     private final String DATA_FILE = "data/tasks.txt";
-    private final String INDEX_FILE = "data/index.txt";
 
     private int nextId = 1;
 
@@ -13,25 +16,27 @@ public class TaskRepository {
     private static final int PRIORITY_SIZE = 10;
     private static final int STATUS_SIZE = 15;
 
-    private static final int RECORD_SIZE = 4 +
-            (NAME_SIZE * 2) +
-            (DESC_SIZE * 2) +
-            (PRIORITY_SIZE * 2) +
-            (STATUS_SIZE * 2);
+    public TaskRepository(StorageMode mode) {
+        this.mode = mode;
 
-    public TaskRepository() {
-        loadTasksFromFile();
+        // ✅ Ensure data folder exists
+        File dir = new File("data");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        if (mode == StorageMode.DISC) {
+            loadTasksFromFile();
+        }
     }
+
+    // ================= LOAD =================
 
     private void loadTasksFromFile() {
 
-        try {
-
-            RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw");
+        try (RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw")) {
 
             while (file.getFilePointer() < file.length()) {
-
-                long position = file.getFilePointer();
 
                 int id = file.readInt();
 
@@ -42,29 +47,33 @@ public class TaskRepository {
 
                 if (id != -1) {
 
-                    Task task = new Task(id, name, desc, Priority.valueOf(priority), Status.valueOf(status));
+                    Task task = new Task(id, name, desc,
+                            Priority.valueOf(priority),
+                            Status.valueOf(status));
 
-                    tasks.add(task);
-
-                    addIndex(id, position);
+                    tasks.add(task);   // ✅ FIXED
 
                     if (id >= nextId) {
                         nextId = id + 1;
                     }
                 }
             }
-            file.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error loading tasks", e);
         }
     }
 
+    // ================= ADD =================
+
     public void addTask(Task task) {
 
-        try {
+        if (mode == StorageMode.MEMORY) {
+            tasks.add(task);
+            return;
+        }
 
-            RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw");
+        try (RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw")) {
 
             long position = file.length();
 
@@ -77,14 +86,10 @@ public class TaskRepository {
             writeFixedString(task.getPriority().name(), PRIORITY_SIZE, file);
             writeFixedString(task.getStatus().name(), STATUS_SIZE, file);
 
-            file.close();
-
-            addIndex(task.getId(), position);
-
-            tasks.add(task);
+            tasks.add(task); // optional cache
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error adding task", e);
         }
     }
 
@@ -92,61 +97,91 @@ public class TaskRepository {
         return nextId++;
     }
 
-    private void addIndex(int id, long position) {
+    // ================= DELETE =================
 
-        try {
+    public void deleteTask(int id) {
 
-            RandomAccessFile index = new RandomAccessFile(INDEX_FILE, "rw");
-
-            index.seek(index.length());
-
-            index.writeInt(id);
-            index.writeLong(position);
-
-            index.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (mode == StorageMode.MEMORY) {
+            tasks.removeIf(t -> t.getId() == id);
+            System.out.println("Task Deleted Successfully");
+            return;
         }
+
+        ArrayList<Task> list = getAllTasks();
+        list.removeIf(t -> t.getId() == id);
+
+        rewriteFileFromList(list);
+
+        System.out.println("Task Deleted Successfully");
     }
 
-    private long getPositionFromIndex(int id) {
+    // ================= UPDATE =================
 
-        try {
+    public void updateTask(int id, String field, String newValue) {
 
-            RandomAccessFile index = new RandomAccessFile(INDEX_FILE, "r");
+        if (mode == StorageMode.MEMORY) {
 
-            while (index.getFilePointer() < index.length()) {
-
-                int storedId = index.readInt();
-                long position = index.readLong();
-
-                if (storedId == id) {
-                    index.close();
-                    return position;
+            for (Task t : tasks) {
+                if (t.getId() == id) {
+                    applyUpdate(t, field, newValue);
                 }
             }
 
-            index.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Task Updated Successfully");
+            return;
         }
 
-        return -1;
+        ArrayList<Task> list = getAllTasks();
+
+        for (Task t : list) {
+            if (t.getId() == id) {
+                applyUpdate(t, field, newValue);
+            }
+        }
+
+        rewriteFileFromList(list);
+
+        System.out.println("Task Updated Successfully");
     }
 
-    public void rewriteFile() {
+    // ================= HELPER =================
+
+    private void applyUpdate(Task t, String field, String newValue) {
 
         try {
 
-            RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw");
+            if (field.equalsIgnoreCase("name")) {
+                t.setName(newValue);
+            }
+
+            else if (field.equalsIgnoreCase("description")) {
+                t.setDescription(newValue);
+            }
+
+            else if (field.equalsIgnoreCase("priority")) {
+                t.setPriority(Priority.valueOf(newValue.toUpperCase()));
+            }
+
+            else if (field.equalsIgnoreCase("status")) {
+                t.setStatus(Status.valueOf(newValue.toUpperCase()));
+            }
+
+            else {
+                System.out.println("Invalid field name");
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid value for " + field);
+        }
+    }
+
+    private void rewriteFileFromList(ArrayList<Task> list) {
+
+        try (RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw")) {
 
             file.setLength(0);
 
-            for (Task task : tasks) {
-
-                long position = file.getFilePointer();
+            for (Task task : list) {
 
                 file.writeInt(task.getId());
 
@@ -154,104 +189,65 @@ public class TaskRepository {
                 writeFixedString(task.getDescription(), DESC_SIZE, file);
                 writeFixedString(task.getPriority().name(), PRIORITY_SIZE, file);
                 writeFixedString(task.getStatus().name(), STATUS_SIZE, file);
-
             }
 
-            file.close();
-
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error rewriting file", e);
         }
     }
 
-    public void deleteTask(int id) {
+    // ================= READ =================
 
-        try {
+    public ArrayList<Task> getAllTasks() {
 
-            long position = getPositionFromIndex(id);
-
-            if (position == -1) {
-                System.out.println("Invalid Task ID");
-                return;
-            }
-
-            RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw");
-
-            file.seek(position);
-
-            file.writeInt(-1);
-
-            file.close();
-
-            tasks.removeIf(t -> t.getId() == id);
-
-            System.out.println("Task Deleted Successfully");
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (mode == StorageMode.MEMORY) {
+            return tasks;
         }
+
+        return readAllFromFile();
     }
 
-    public void updateTask(int id, String field, String newValue) {
+    private ArrayList<Task> readAllFromFile() {
 
-        try {
+        ArrayList<Task> list = new ArrayList<>();
 
-            long position = getPositionFromIndex(id);
+        try (RandomAccessFile file = new RandomAccessFile(DATA_FILE, "r")) {
 
-            if (position == -1) {
-                System.out.println("Invalid Task ID");
-                return;
-            }
+            while (file.getFilePointer() < file.length()) {
 
-            RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw");
+                int id = file.readInt();
 
-            if (field.equalsIgnoreCase("name")) {
+                String name = readFixedString(NAME_SIZE, file).trim();
+                String desc = readFixedString(DESC_SIZE, file).trim();
+                String priority = readFixedString(PRIORITY_SIZE, file).trim();
+                String status = readFixedString(STATUS_SIZE, file).trim();
 
-                file.seek(position + 4);
-                writeFixedString(newValue, NAME_SIZE, file);
-
-            } else if (field.equalsIgnoreCase("description")) {
-
-                file.seek(position + 4 + (NAME_SIZE * 2));
-                writeFixedString(newValue, DESC_SIZE, file);
-
-            } else if (field.equalsIgnoreCase("priority")) {
-
-                file.seek(position + 4 + (NAME_SIZE * 2) + (DESC_SIZE * 2));
-                writeFixedString(newValue.toUpperCase(), PRIORITY_SIZE, file);
-
-            } else if (field.equalsIgnoreCase("status")) {
-
-                file.seek(position + 4 + (NAME_SIZE * 2) + (DESC_SIZE * 2) + (PRIORITY_SIZE * 2));
-                writeFixedString(newValue.toUpperCase(), STATUS_SIZE, file);
-            }
-
-            file.close();
-
-            for (Task t : tasks) {
-
-                if (t.getId() == id) {
-
-                    if (field.equalsIgnoreCase("name"))
-                        t.setName(newValue);
-
-                    if (field.equalsIgnoreCase("description"))
-                        t.setDescription(newValue);
-
-                    if (field.equalsIgnoreCase("priority"))
-                        t.setPriority(Priority.valueOf(newValue.toUpperCase()));
-
-                    if (field.equalsIgnoreCase("status"))
-                        t.setStatus(Status.valueOf(newValue.toUpperCase()));
+                if (id != -1) {
+                    list.add(new Task(id, name, desc,
+                            Priority.valueOf(priority),
+                            Status.valueOf(status)));
                 }
             }
 
-            System.out.println("Task Updated Successfully");
-
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error reading file", e);
         }
+
+        return list;
     }
+
+    // ================= EXISTS =================
+
+    public boolean taskExists(int id) {
+
+        if (mode == StorageMode.MEMORY) {
+            return tasks.stream().anyMatch(t -> t.getId() == id);
+        }
+
+        return getAllTasks().stream().anyMatch(t -> t.getId() == id);
+    }
+
+    // ================= FIXED STRING =================
 
     private void writeFixedString(String s, int size, RandomAccessFile file) throws IOException {
 
@@ -264,6 +260,7 @@ public class TaskRepository {
                 sb.append(" ");
             }
         }
+
         file.writeChars(sb.toString());
     }
 
@@ -271,25 +268,10 @@ public class TaskRepository {
 
         char[] chars = new char[size];
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             chars[i] = file.readChar();
+        }
 
         return new String(chars);
     }
-
-    public boolean taskExists(int id) {
-
-        for (Task task : tasks) {
-
-            if (task.getId() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public ArrayList<Task> getAllTasks() {
-        return tasks;
-    }
-
 }

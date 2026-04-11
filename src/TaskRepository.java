@@ -51,7 +51,7 @@ public class TaskRepository {
                             Priority.valueOf(priority),
                             Status.valueOf(status));
 
-                    tasks.add(task);   // ✅ FIXED
+                    tasks.add(task); // ✅ FIXED
 
                     if (id >= nextId) {
                         nextId = id + 1;

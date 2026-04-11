@@ -20,10 +20,20 @@ public class TaskServices {
     }
 
     public void deleteTask(int id) {
+
+        if (!repository.taskExists(id)) {
+            throw new RuntimeException("Task not found");
+        }
+        
         repository.deleteTask(id);
     }
 
     public void updateTask(int id, String field, String newValue) {
+        
+        if (!repository.taskExists(id)) {
+            throw new RuntimeException("Task not found");
+        }
+
         repository.updateTask(id, field, newValue);
     }
 
@@ -43,5 +53,9 @@ public class TaskServices {
         for (Task task : tasks) {
             System.out.println(task);
         }
+    }
+
+    public List<Task> getAllTasks() {
+        return repository.getAllTasks();
     }
 }

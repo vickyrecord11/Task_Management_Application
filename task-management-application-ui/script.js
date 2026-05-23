@@ -39,70 +39,6 @@ function addTask() {
         return;
     }
 
-    //     let table =
-    //         document.getElementById("taskTable")
-    //             .getElementsByTagName("tbody")[0];
-
-    //     if (editRow != null) {
-
-    //         editRow.cells[1].innerHTML = name;
-
-    //         editRow.cells[2].innerHTML = category;
-
-    //         editRow.cells[3].innerHTML = description;
-
-    //         editRow.cells[4].innerHTML = priority;
-
-    //         editRow.cells[5].innerHTML = dueDate;
-
-    //         editRow.cells[6].innerHTML = status;
-
-    //         editRow = null;
-    //     }
-
-    //     else {
-
-    //         let rowCount = table.rows.length + 1;
-
-    //         let row = table.insertRow();
-
-    //         row.innerHTML = `
-
-    //             <td>${rowCount}</td>
-
-    //             <td>${name}</td>
-
-    //             <td>${category}</td>
-
-    //             <td>${description}</td>
-
-    //             <td>${priority}</td>
-
-    //             <td>${dueDate}</td>
-
-    //             <td>${status}</td>
-
-    //             <td>
-
-    //                 <button class="edit-btn"
-    //                     onclick="editTask(this)">
-    //                     Edit
-    //                 </button>
-
-    //                 <button class="delete-btn"
-    //                     onclick="deleteTask(this)">
-    //                     Delete
-    //                 </button>
-
-    //             </td>
-    //         `;
-    //     }
-
-    //     document.getElementById("taskForm").reset();
-
-    //     document.getElementById("taskForm").style.display =
-    //         "none";
-    // }
 
     let task = {
 
@@ -167,16 +103,6 @@ function addTask() {
         });
 }
 
-// function deleteTask(button) {
-
-//     let row =
-//         button.parentElement.parentElement;
-
-//     row.remove();
-
-//     updateNumbers();
-// }
-
 function deleteTask(id) {
 
     fetch(`http://localhost:8000/tasks?id=${id}`, {
@@ -218,44 +144,6 @@ function editTask(task) {
         "block";
 }
 
-// function editTask(button) {
-
-//     editRow =
-//         button.parentElement.parentElement;
-
-//     document.getElementById("name").value =
-//         editRow.cells[1].innerHTML;
-
-//     document.getElementById("category").value =
-//         editRow.cells[2].innerHTML;
-
-//     document.getElementById("description").value =
-//         editRow.cells[3].innerHTML;
-
-//     document.getElementById("priority").value =
-//         editRow.cells[4].innerHTML;
-
-//     document.getElementById("dueDate").value =
-//         editRow.cells[5].innerHTML;
-
-//     document.getElementById("status").value =
-//         editRow.cells[6].innerHTML;
-
-//     document.getElementById("taskForm").style.display =
-//         "block";
-// }
-
-// function updateNumbers() {
-
-//     let table =
-//         document.getElementById("taskTable")
-//             .getElementsByTagName("tbody")[0];
-
-//     for (let i = 0; i < table.rows.length; i++) {
-
-//         table.rows[i].cells[0].innerHTML = i + 1;
-//     }
-// }
 
 function loadTasks() {
 

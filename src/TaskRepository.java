@@ -12,6 +12,7 @@ public class TaskRepository {
     private int nextId = 1;
 
     private static final int NAME_SIZE = 40;
+    private static final int CATEGORY_SIZE = 40;
     private static final int DESC_SIZE = 100;
     private static final int PRIORITY_SIZE = 10;
     private static final int STATUS_SIZE = 15;
@@ -19,7 +20,6 @@ public class TaskRepository {
     public TaskRepository(StorageMode mode) {
         this.mode = mode;
 
-        // ✅ Ensure data folder exists
         File dir = new File("data");
         if (!dir.exists()) {
             dir.mkdir();
@@ -30,8 +30,6 @@ public class TaskRepository {
         }
     }
 
-    // ================= LOAD =================
-
     private void loadTasksFromFile() {
 
         try (RandomAccessFile file = new RandomAccessFile(DATA_FILE, "rw")) {
@@ -41,17 +39,18 @@ public class TaskRepository {
                 int id = file.readInt();
 
                 String name = readFixedString(NAME_SIZE, file).trim();
+                String category = readFixedString(CATEGORY_SIZE, file).trim();
                 String desc = readFixedString(DESC_SIZE, file).trim();
                 String priority = readFixedString(PRIORITY_SIZE, file).trim();
                 String status = readFixedString(STATUS_SIZE, file).trim();
 
                 if (id != -1) {
 
-                    Task task = new Task(id, name, desc,
+                    Task task = new Task(id, name, category, desc,
                             Priority.valueOf(priority),
                             Status.valueOf(status));
 
-                    tasks.add(task); // ✅ FIXED
+                    tasks.add(task);
 
                     if (id >= nextId) {
                         nextId = id + 1;
@@ -63,8 +62,6 @@ public class TaskRepository {
             throw new RuntimeException("Error loading tasks", e);
         }
     }
-
-    // ================= ADD =================
 
     public void addTask(Task task) {
 
@@ -82,11 +79,12 @@ public class TaskRepository {
             file.writeInt(task.getId());
 
             writeFixedString(task.getName(), NAME_SIZE, file);
+            writeFixedString(task.getCategory(), CATEGORY_SIZE, file);
             writeFixedString(task.getDescription(), DESC_SIZE, file);
             writeFixedString(task.getPriority().name(), PRIORITY_SIZE, file);
             writeFixedString(task.getStatus().name(), STATUS_SIZE, file);
 
-            tasks.add(task); // optional cache
+            tasks.add(task);
 
         } catch (Exception e) {
             throw new RuntimeException("Error adding task", e);
@@ -96,8 +94,6 @@ public class TaskRepository {
     public int generateId() {
         return nextId++;
     }
-
-    // ================= DELETE =================
 
     public void deleteTask(int id) {
 
@@ -115,27 +111,52 @@ public class TaskRepository {
         System.out.println("Task Deleted Successfully");
     }
 
-    // ================= UPDATE =================
-
-    public void updateTask(int id, String field, String newValue) {
+    public void updateTask(
+            int id,
+            String name,
+            String category,
+            String description,
+            Priority priority,
+            Status status) {
 
         if (mode == StorageMode.MEMORY) {
 
             for (Task t : tasks) {
+
                 if (t.getId() == id) {
-                    applyUpdate(t, field, newValue);
+
+                    t.setName(name);
+
+                    t.setCategory(category);
+
+                    t.setDescription(description);
+
+                    t.setPriority(priority);
+
+                    t.setStatus(status);
                 }
             }
 
             System.out.println("Task Updated Successfully");
+
             return;
         }
 
         ArrayList<Task> list = getAllTasks();
 
         for (Task t : list) {
+
             if (t.getId() == id) {
-                applyUpdate(t, field, newValue);
+
+                t.setName(name);
+
+                t.setCategory(category);
+
+                t.setDescription(description);
+
+                t.setPriority(priority);
+
+                t.setStatus(status);
             }
         }
 
@@ -144,36 +165,38 @@ public class TaskRepository {
         System.out.println("Task Updated Successfully");
     }
 
-    // ================= HELPER =================
+    // private void applyUpdate(Task t, String field, String newValue) {
 
-    private void applyUpdate(Task t, String field, String newValue) {
+    //     try {
 
-        try {
+    //         if (field.equalsIgnoreCase("name")) {
+    //             t.setName(newValue);
+    //         }
 
-            if (field.equalsIgnoreCase("name")) {
-                t.setName(newValue);
-            }
+    //         else if (field.equalsIgnoreCase("category")) {
+    //             t.setCategory(newValue);
+    //         }
 
-            else if (field.equalsIgnoreCase("description")) {
-                t.setDescription(newValue);
-            }
+    //         else if (field.equalsIgnoreCase("description")) {
+    //             t.setDescription(newValue);
+    //         }
 
-            else if (field.equalsIgnoreCase("priority")) {
-                t.setPriority(Priority.valueOf(newValue.toUpperCase()));
-            }
+    //         else if (field.equalsIgnoreCase("priority")) {
+    //             t.setPriority(Priority.valueOf(newValue.toUpperCase()));
+    //         }
 
-            else if (field.equalsIgnoreCase("status")) {
-                t.setStatus(Status.valueOf(newValue.toUpperCase()));
-            }
+    //         else if (field.equalsIgnoreCase("status")) {
+    //             t.setStatus(Status.valueOf(newValue.toUpperCase()));
+    //         }
 
-            else {
-                System.out.println("Invalid field name");
-            }
+    //         else {
+    //             System.out.println("Invalid field name");
+    //         }
 
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid value for " + field);
-        }
-    }
+    //     } catch (IllegalArgumentException e) {
+    //         System.out.println("Invalid value for " + field);
+    //     }
+    // }
 
     private void rewriteFileFromList(ArrayList<Task> list) {
 
@@ -186,6 +209,7 @@ public class TaskRepository {
                 file.writeInt(task.getId());
 
                 writeFixedString(task.getName(), NAME_SIZE, file);
+                writeFixedString(task.getCategory(), CATEGORY_SIZE, file);
                 writeFixedString(task.getDescription(), DESC_SIZE, file);
                 writeFixedString(task.getPriority().name(), PRIORITY_SIZE, file);
                 writeFixedString(task.getStatus().name(), STATUS_SIZE, file);
@@ -195,8 +219,6 @@ public class TaskRepository {
             throw new RuntimeException("Error rewriting file", e);
         }
     }
-
-    // ================= READ =================
 
     public ArrayList<Task> getAllTasks() {
 
@@ -218,12 +240,13 @@ public class TaskRepository {
                 int id = file.readInt();
 
                 String name = readFixedString(NAME_SIZE, file).trim();
+                String category = readFixedString(CATEGORY_SIZE, file).trim();
                 String desc = readFixedString(DESC_SIZE, file).trim();
                 String priority = readFixedString(PRIORITY_SIZE, file).trim();
                 String status = readFixedString(STATUS_SIZE, file).trim();
 
                 if (id != -1) {
-                    list.add(new Task(id, name, desc,
+                    list.add(new Task(id, name, category, desc,
                             Priority.valueOf(priority),
                             Status.valueOf(status)));
                 }

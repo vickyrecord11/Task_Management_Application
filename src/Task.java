@@ -2,13 +2,15 @@ public class Task {
 
     int id;
     String name;
+    String category;
     String description;
     Priority priority;
     Status status;
 
-    Task(int id, String name, String description, Priority priority, Status status) {
+    Task(int id, String name, String category, String description, Priority priority, Status status) {
         this.id = id;
         this.name = name;
+        this.category = category;
         this.description = description;
         this.priority = priority;
         this.status = status;
@@ -20,6 +22,10 @@ public class Task {
 
     public String getName() {
         return name;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public String getDescription() {
@@ -42,6 +48,10 @@ public class Task {
         this.name = name;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -54,9 +64,11 @@ public class Task {
         this.status = status;
     }
 
+    @Override
     public String toString() {
         return "Id: " + id +
                 ", Name: " + name +
+                ", Category: " + category +
                 ", Description: " + description +
                 ", Priority: " + priority +
                 ", Status: " + status;

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Task Manager</title>
+
+    <link rel="stylesheet"
+        href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Task Manager</h1>
+
+        <button onclick="showForm()"
+            class="add-btn">
+            Add Task
+        </button>
+
+        <!-- FORM -->
+
+        <form class="task-form"
+            id="taskForm">
+
+            <input type="text"
+                id="name"
+                placeholder="Task Name"
+                required>
+
+            <input type="text"
+                id="category"
+                placeholder="Category"
+                required>
+
+            <input type="text"
+                id="description"
+                placeholder="Description"
+                required>
+
+            <input type="date"
+                id="dueDate"
+                required>
+
+            <select id="priority">
+
+                <option>HIGH</option>
+
+                <option>MEDIUM</option>
+
+                <option>LOW</option>
+
+            </select>
+
+            <select id="status">
+
+                <option>TO_DO</option>
+
+                <option>IN_PROGRESS</option>
+
+                <option>DONE</option>
+
+            </select>
+
+            <button type="button"
+                onclick="addTask()"
+                class="save-btn">
+
+                Save
+
+            </button>
+
+        </form>
+
+        <!-- TABLE -->
+
+        <table id="taskTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>S.No</th>
+
+                    <th>Name</th>
+
+                    <th>Category</th>
+
+                    <th>Description</th>
+
+                    <th>Priority</th>
+
+                    <th>Due Date</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -13,6 +13,24 @@ public class TaskHandler implements HttpHandler {
         try {
             String method = exchange.getRequestMethod();
 
+            exchange.getResponseHeaders().add(
+                    "Access-Control-Allow-Origin", "*");
+
+            exchange.getResponseHeaders().add(
+                    "Access-Control-Allow-Methods",
+                    "GET, POST, PUT, DELETE, OPTIONS");
+
+            exchange.getResponseHeaders().add(
+                    "Access-Control-Allow-Headers",
+                    "Content-Type");
+
+            if (method.equalsIgnoreCase("OPTIONS")) {
+
+                exchange.sendResponseHeaders(204, -1);
+
+                return;
+            }
+
             switch (method) {
                 case "GET":
                     handleGet(exchange);
@@ -31,7 +49,7 @@ public class TaskHandler implements HttpHandler {
             }
 
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
             sendJson(exchange, 500, "Internal Server Error", null);
         }
     }
@@ -49,30 +67,27 @@ public class TaskHandler implements HttpHandler {
 
         JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
 
-        // Validation
-        if (!obj.has("name") || !obj.has("description") ||
-            !obj.has("priority") || !obj.has("status")) {
+        if (!obj.has("name") || !obj.has("category") || !obj.has("description") ||
+                !obj.has("priority") || !obj.has("status")) {
 
             sendJson(exchange, 400, "Missing required fields", null);
             return;
         }
 
         String name = obj.get("name").getAsString();
+        String category = obj.get("category").getAsString();
         String desc = obj.get("description").getAsString();
 
         Priority priority = Priority.valueOf(
-                obj.get("priority").getAsString().toUpperCase()
-        );
+                obj.get("priority").getAsString().toUpperCase());
 
         Status status = Status.valueOf(
-                obj.get("status").getAsString().toUpperCase()
-        );
+                obj.get("status").getAsString().toUpperCase());
 
-        App.service.createTask(name, desc, priority, status);
+        App.service.createTask(name, category, desc, priority, status);
 
         sendJson(exchange, 201, "Task Created Successfully", null);
     }
-
 
     private void handlePut(HttpExchange exchange) throws IOException {
 
@@ -80,16 +95,43 @@ public class TaskHandler implements HttpHandler {
 
         JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
 
-        if (!obj.has("id") || !obj.has("field") || !obj.has("value")) {
-            sendJson(exchange, 400, "Missing required fields", null);
-            return;
-        }
+        if (!obj.has("id")
+        || !obj.has("name")
+        || !obj.has("category")
+        || !obj.has("description")
+        || !obj.has("priority")
+        || !obj.has("status")) {
+
+    sendJson(exchange, 400,
+            "Missing required fields", null);
+
+    return;
+}
 
         int id = obj.get("id").getAsInt();
-        String field = obj.get("field").getAsString();
-        String value = obj.get("value").getAsString();
+        String name = obj.get("name").getAsString();
 
-        App.service.updateTask(id, field, value);
+        String category = obj.get("category").getAsString();
+
+        String description = obj.get("description").getAsString();
+
+        Priority priority = Priority.valueOf(
+                obj.get("priority")
+                        .getAsString()
+                        .toUpperCase());
+
+        Status status = Status.valueOf(
+                obj.get("status")
+                        .getAsString()
+                        .toUpperCase());
+
+        App.service.updateTask(
+                id,
+                name,
+                category,
+                description,
+                priority,
+                status);
 
         sendJson(exchange, 200, "Task Updated Successfully", null);
     }
@@ -110,12 +152,10 @@ public class TaskHandler implements HttpHandler {
         sendJson(exchange, 200, "Task Deleted Successfully", null);
     }
 
-
     private String readBody(HttpExchange exchange) throws IOException {
 
         BufferedReader br = new BufferedReader(
-                new InputStreamReader(exchange.getRequestBody())
-        );
+                new InputStreamReader(exchange.getRequestBody()));
 
         StringBuilder sb = new StringBuilder();
         String line;

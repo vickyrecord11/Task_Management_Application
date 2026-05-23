@@ -2,17 +2,17 @@ import java.util.List;
 
 public class TaskServices {
 
-    private TaskRepository repository;
+    private final TaskRepository repository;
 
     public TaskServices(StorageMode mode) {
         repository = new TaskRepository(mode);
     }
 
-    public void createTask(String name, String description, Priority priority, Status status) {
+    public void createTask(String name, String category, String description, Priority priority, Status status) {
 
         int id = repository.generateId();
 
-        Task task = new Task(id, name, description, priority, status);
+        Task task = new Task(id, name, category, description, priority, status);
 
         repository.addTask(task);
 
@@ -28,14 +28,27 @@ public class TaskServices {
         repository.deleteTask(id);
     }
 
-    public void updateTask(int id, String field, String newValue) {
-        
-        if (!repository.taskExists(id)) {
-            throw new RuntimeException("Task not found");
-        }
+    public void updateTask(
+        int id,
+        String name,
+        String category,
+        String description,
+        Priority priority,
+        Status status) {
 
-        repository.updateTask(id, field, newValue);
+    if (!repository.taskExists(id)) {
+
+        throw new RuntimeException("Task not found");
     }
+
+    repository.updateTask(
+            id,
+            name,
+            category,
+            description,
+            priority,
+            status);
+}
 
     public boolean taskExists(int id) {
         return repository.taskExists(id);

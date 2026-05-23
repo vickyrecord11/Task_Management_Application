@@ -21,18 +21,19 @@ function addTask() {
     let description =
         document.getElementById("description").value;
 
-    let dueDate =
-        document.getElementById("dueDate").value;
-
     let priority =
         document.getElementById("priority").value;
+
+    let dueDate =
+        document.getElementById("dueDate").value;
 
     let status =
         document.getElementById("status").value;
 
     if (name.trim() === "" ||
         category.trim() === "" ||
-        description.trim() === "") {
+        description.trim() === "" ||
+        dueDate.trim() === "") {
 
         alert("Please fill all fields");
 
@@ -49,6 +50,8 @@ function addTask() {
         description: description,
 
         priority: priority,
+
+        dueDate: dueDate,
 
         status: status
     };
@@ -79,6 +82,8 @@ function addTask() {
                     description: description,
 
                     priority: priority,
+
+                    dueDate: dueDate,
 
                     status: status
                 }
@@ -137,6 +142,9 @@ function editTask(task) {
     document.getElementById("priority").value =
         task.priority;
 
+    document.getElementById("dueDate").value =
+        task.dueDate;
+
     document.getElementById("status").value =
         task.status;
 
@@ -177,7 +185,7 @@ function loadTasks() {
 
                 <td>${task.priority}</td>
 
-                <td>---</td>
+                <td>${task.dueDate}</td>
 
                 <td>${task.status}</td>
 

@@ -5,14 +5,16 @@ public class Task {
     String category;
     String description;
     Priority priority;
+    String dueDate;
     Status status;
 
-    Task(int id, String name, String category, String description, Priority priority, Status status) {
+    Task(int id, String name, String category, String description, Priority priority, String dueDate, Status status) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.description = description;
         this.priority = priority;
+        this.dueDate = dueDate;
         this.status = status;
     }
 
@@ -34,6 +36,10 @@ public class Task {
 
     public Priority getPriority() {
         return priority;
+    }
+
+    public String getDueDate() {
+        return dueDate;
     }
 
     public Status getStatus() {
@@ -60,6 +66,10 @@ public class Task {
         this.priority = priority;
     }
 
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -71,6 +81,7 @@ public class Task {
                 ", Category: " + category +
                 ", Description: " + description +
                 ", Priority: " + priority +
+                ", DueDate: " + dueDate +
                 ", Status: " + status;
     }
 }

@@ -9,7 +9,7 @@ public class App {
 
         System.out.println("TEST START");
 
-        service = new TaskServices(StorageMode.MEMORY);
+        service = new TaskServices(StorageMode.DISC);
         
         HttpServer server = HttpServer.create(new InetSocketAddress(8000),0);
         

@@ -68,7 +68,7 @@ public class TaskHandler implements HttpHandler {
         JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
 
         if (!obj.has("name") || !obj.has("category") || !obj.has("description") ||
-                !obj.has("priority") || !obj.has("status")) {
+                !obj.has("priority") || !obj.has("dueDate") || !obj.has("status")) {
 
             sendJson(exchange, 400, "Missing required fields", null);
             return;
@@ -81,10 +81,12 @@ public class TaskHandler implements HttpHandler {
         Priority priority = Priority.valueOf(
                 obj.get("priority").getAsString().toUpperCase());
 
+        String dueDate = obj.get("dueDate").getAsString();
+
         Status status = Status.valueOf(
                 obj.get("status").getAsString().toUpperCase());
 
-        App.service.createTask(name, category, desc, priority, status);
+        App.service.createTask(name, category, desc, priority, dueDate, status);
 
         sendJson(exchange, 201, "Task Created Successfully", null);
     }
@@ -100,6 +102,7 @@ public class TaskHandler implements HttpHandler {
         || !obj.has("category")
         || !obj.has("description")
         || !obj.has("priority")
+        || !obj.has("dueDate")
         || !obj.has("status")) {
 
     sendJson(exchange, 400,
@@ -120,6 +123,8 @@ public class TaskHandler implements HttpHandler {
                         .getAsString()
                         .toUpperCase());
 
+        String dueDate = obj.get("dueDate").getAsString();
+
         Status status = Status.valueOf(
                 obj.get("status")
                         .getAsString()
@@ -131,6 +136,7 @@ public class TaskHandler implements HttpHandler {
                 category,
                 description,
                 priority,
+                dueDate,
                 status);
 
         sendJson(exchange, 200, "Task Updated Successfully", null);

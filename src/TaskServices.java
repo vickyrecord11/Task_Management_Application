@@ -8,11 +8,11 @@ public class TaskServices {
         repository = new TaskRepository(mode);
     }
 
-    public void createTask(String name, String category, String description, Priority priority, Status status) {
+    public void createTask(String name, String category, String description, Priority priority, String dueDate, Status status) {
 
         int id = repository.generateId();
 
-        Task task = new Task(id, name, category, description, priority, status);
+        Task task = new Task(id, name, category, description, priority, dueDate, status);
 
         repository.addTask(task);
 
@@ -34,6 +34,7 @@ public class TaskServices {
         String category,
         String description,
         Priority priority,
+        String dueDate,
         Status status) {
 
     if (!repository.taskExists(id)) {
@@ -47,6 +48,7 @@ public class TaskServices {
             category,
             description,
             priority,
+            dueDate,
             status);
 }
 

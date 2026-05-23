@@ -15,6 +15,7 @@ public class TaskRepository {
     private static final int CATEGORY_SIZE = 40;
     private static final int DESC_SIZE = 100;
     private static final int PRIORITY_SIZE = 10;
+    private static final int DUEDATE_SIZE = 40;
     private static final int STATUS_SIZE = 15;
 
     public TaskRepository(StorageMode mode) {
@@ -42,12 +43,14 @@ public class TaskRepository {
                 String category = readFixedString(CATEGORY_SIZE, file).trim();
                 String desc = readFixedString(DESC_SIZE, file).trim();
                 String priority = readFixedString(PRIORITY_SIZE, file).trim();
+                String dueDate = readFixedString(DUEDATE_SIZE, file).trim();
                 String status = readFixedString(STATUS_SIZE, file).trim();
 
                 if (id != -1) {
 
                     Task task = new Task(id, name, category, desc,
-                            Priority.valueOf(priority),
+                            Priority.valueOf(priority), 
+                            dueDate,
                             Status.valueOf(status));
 
                     tasks.add(task);
@@ -82,6 +85,7 @@ public class TaskRepository {
             writeFixedString(task.getCategory(), CATEGORY_SIZE, file);
             writeFixedString(task.getDescription(), DESC_SIZE, file);
             writeFixedString(task.getPriority().name(), PRIORITY_SIZE, file);
+            writeFixedString(task.getDueDate(), DUEDATE_SIZE, file);
             writeFixedString(task.getStatus().name(), STATUS_SIZE, file);
 
             tasks.add(task);
@@ -117,6 +121,7 @@ public class TaskRepository {
             String category,
             String description,
             Priority priority,
+            String dueDate,
             Status status) {
 
         if (mode == StorageMode.MEMORY) {
@@ -132,6 +137,8 @@ public class TaskRepository {
                     t.setDescription(description);
 
                     t.setPriority(priority);
+
+                    t.setDueDate(dueDate);
 
                     t.setStatus(status);
                 }
@@ -155,6 +162,8 @@ public class TaskRepository {
                 t.setDescription(description);
 
                 t.setPriority(priority);
+
+                t.setDueDate(dueDate);
 
                 t.setStatus(status);
             }
@@ -212,6 +221,7 @@ public class TaskRepository {
                 writeFixedString(task.getCategory(), CATEGORY_SIZE, file);
                 writeFixedString(task.getDescription(), DESC_SIZE, file);
                 writeFixedString(task.getPriority().name(), PRIORITY_SIZE, file);
+                writeFixedString(task.getDueDate(), DUEDATE_SIZE, file);
                 writeFixedString(task.getStatus().name(), STATUS_SIZE, file);
             }
 
@@ -243,11 +253,13 @@ public class TaskRepository {
                 String category = readFixedString(CATEGORY_SIZE, file).trim();
                 String desc = readFixedString(DESC_SIZE, file).trim();
                 String priority = readFixedString(PRIORITY_SIZE, file).trim();
+                String dueDate = readFixedString(DUEDATE_SIZE, file).trim();
                 String status = readFixedString(STATUS_SIZE, file).trim();
 
                 if (id != -1) {
                     list.add(new Task(id, name, category, desc,
                             Priority.valueOf(priority),
+                            dueDate,
                             Status.valueOf(status)));
                 }
             }

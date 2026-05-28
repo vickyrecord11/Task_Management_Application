@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- <tilte>TASK MANAGER</tilte> -->
+
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device width, initial-scale=1.0">
 
     <title>Task Manager</title>
 
-    <link rel="stylesheet"
-        href="style.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -19,104 +19,481 @@
 
     <div class="container">
 
-        <h1>Task Manager</h1>
+        <div class="left">
 
-        <button onclick="showForm()"
-            class="add-btn">
-            Add Task
-        </button>
+            <div class="top-section">
 
-        <!-- FORM -->
+                <div class="logo-section">
 
-        <form class="task-form"
-            id="taskForm">
+                    <img src="clipboard-check-line-svgrepo-com.svg" class="icon1">
 
-            <input type="text"
-                id="name"
-                placeholder="Task Name"
-                required>
+                    <h1>Task Manager</h1>
 
-            <input type="text"
-                id="category"
-                placeholder="Category"
-                required>
+                </div>
 
-            <input type="text"
-                id="description"
-                placeholder="Description"
-                required>
+            </div>
 
-            <input type="date"
-                id="dueDate"
-                required>
+            <div class="middle-section">
 
-            <select id="priority">
+                <h2 id="tasks-btn" class="menu-item active-menu">
+                    <img src="tasks.svg" class="icon2">
 
-                <option>HIGH</option>
+                    <span>Tasks</span>
+                </h2>
 
-                <option>MEDIUM</option>
 
-                <option>LOW</option>
+                <h2 id="categories-btn" class="menu-item">
+                    <img src="category.svg" class="icon2">
+                    <span>Categories</span>
+                </h2>
 
-            </select>
 
-            <select id="status">
+                <h2 id="priority-btn" class="menu-item">
+                    <img src="priority.svg" class="icon2">
+                    <span>Priority</span>
+                </h2>
 
-                <option>TO_DO</option>
+            </div>
 
-                <option>IN_PROGRESS</option>
 
-                <option>DONE</option>
+            <div class="summary-section">
 
-            </select>
+                <h2>Summary</h2>
 
-            <button type="button"
-                onclick="addTask()"
-                class="save-btn">
+                <div class="status">
 
-                Save
+                    <div class="dot total"></div>
 
-            </button>
+                    <p class="text">Total Tasks</p>
 
-        </form>
+                    <span>10</span>
 
-        <!-- TABLE -->
+                </div>
 
-        <table id="taskTable">
 
-            <thead>
+                <div class="status">
 
-                <tr>
+                    <div class="dot todo"></div>
 
-                    <th>S.No</th>
+                    <p class="text">To Do</p>
 
-                    <th>Name</th>
+                    <span>4</span>
 
-                    <th>Category</th>
+                </div>
 
-                    <th>Description</th>
 
-                    <th>Priority</th>
+                <div class="status">
 
-                    <th>Due Date</th>
+                    <div class="dot progress"></div>
 
-                    <th>Status</th>
+                    <p class="text">In Progress</p>
 
-                    <th>Action</th>
+                    <span>3</span>
 
-                </tr>
+                </div>
 
-            </thead>
 
-            <tbody>
+                <div class="status">
 
-            </tbody>
+                    <div class="dot completed"></div>
 
-        </table>
+                    <p class="text">Completed</p>
+
+                    <span>3</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="right">
+
+            <div class="right-top">
+
+                <div class="heading-section">
+
+                    <h2>Tasks</h2>
+
+                    <p>
+                        Manage and organize your tasks efficiently
+                    </p>
+
+                </div>
+
+                <div class="top-actions">
+
+                    <div class="search-box">
+
+                        <img src="search-svgrepo-com.svg" class="search-icon">
+
+                        <input type="text" placeholder="Search tasks...">
+
+                    </div>
+
+                    <button class="add-task-btn">
+
+                        <img src="plus-large-svgrepo-com.svg" class="btn-icon">
+
+                        <span>Add Task</span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="table-section">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>S.No</th>
+
+                            <th>Task Name</th>
+
+                            <th>Category</th>
+
+                            <th>Description</th>
+
+                            <th>Due Date</th>
+
+                            <th>Status</th>
+
+                            <th>Priority</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>1</td>
+
+                            <td>UI Design</td>
+
+                            <td>Frontend</td>
+
+                            <td>Create dashboard layout</td>
+
+                            <td>12 Aug 2025</td>
+
+                            <td>
+
+                                <span class="status-pill progress-pill">
+
+                                    In Progress
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="priority-pill high-pill">
+
+                                    High
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <button class="edit-btn">
+
+                                        <img src="edit-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                    <button class="delete-btn">
+
+                                        <img src="delete-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>2</td>
+
+                            <td>Bug Fixing</td>
+
+                            <td>Testing</td>
+
+                            <td>Fix alignment and UI issues</td>
+
+                            <td>18 Aug 2025</td>
+
+                            <td>
+
+                                <span class="status-pill done-pill">
+
+                                    Done
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="priority-pill low-pill">
+
+                                    Low
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <!-- EDIT -->
+
+                                    <button class="edit-btn">
+
+                                        <img src="edit-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                    <!-- DELETE -->
+
+                                    <button class="delete-btn">
+
+                                        <img src="delete-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>3</td>
+
+                            <td>Bug Fixing</td>
+
+                            <td>Testing</td>
+
+                            <td>Fix alignment and UI issues</td>
+
+                            <td>18 Aug 2025</td>
+
+                            <td>
+
+                                <span class="status-pill done-pill">
+
+                                    Done
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="priority-pill low-pill">
+
+                                    Low
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <!-- EDIT -->
+
+                                    <button class="edit-btn">
+
+                                        <img src="edit-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                    <!-- DELETE -->
+
+                                    <button class="delete-btn">
+
+                                        <img src="delete-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>4</td>
+
+                            <td>Bug Fixing</td>
+
+                            <td>Testing</td>
+
+                            <td>Fix alignment and UI issues</td>
+
+                            <td>18 Aug 2025</td>
+
+                            <td>
+
+                                <span class="status-pill done-pill">
+
+                                    Done
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="priority-pill low-pill">
+
+                                    Low
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <!-- EDIT -->
+
+                                    <button class="edit-btn">
+
+                                        <img src="edit-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                    <!-- DELETE -->
+
+                                    <button class="delete-btn">
+
+                                        <img src="delete-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>5</td>
+
+                            <td>Bug Fixing</td>
+
+                            <td>Testing</td>
+
+                            <td>Fix alignment and UI issues</td>
+
+                            <td>18 Aug 2025</td>
+
+                            <td>
+
+                                <span class="status-pill done-pill">
+
+                                    Done
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <span class="priority-pill low-pill">
+
+                                    Low
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <!-- EDIT -->
+
+                                    <button class="edit-btn">
+
+                                        <img src="edit-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                    <!-- DELETE -->
+
+                                    <button class="delete-btn">
+
+                                        <img src="delete-svgrepo-com.svg" class="action-icon">
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+                <div class="table-footer">
+
+                    <p>Showing 1 to 5 of 5 tasks</p>
+
+                    <div class="pagination">
+
+                        <button class="page-btn">
+                            &#8249;
+                        </button>
+
+                        <button class="page-btn active">
+                            1
+                        </button>
+
+                        <button class="page-btn">
+                            &#8250;
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
-    <script src="script.js"></script>
 
 </body>
 

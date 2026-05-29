@@ -1,210 +1,326 @@
-let editRow = null;
+// let editRow = null;
 
-let editId = null;
-
-
-function showForm() {
-
-    document.getElementById("taskForm").style.display =
-        "block";
-}
+// let editId = null;
 
 
-function addTask() {
+// function showForm() {
 
-    let name =
-        document.getElementById("name").value;
+//     document.getElementById("taskForm").style.display =
+//         "block";
+// }
 
-    let category =
-        document.getElementById("category").value;
 
-    let description =
-        document.getElementById("description").value;
+// function addTask() {
 
-    let priority =
-        document.getElementById("priority").value;
+//     let name =
+//         document.getElementById("name").value;
 
-    let dueDate =
-        document.getElementById("dueDate").value;
+//     let category =
+//         document.getElementById("category").value;
 
-    let status =
-        document.getElementById("status").value;
+//     let description =
+//         document.getElementById("description").value;
 
-    if (name.trim() === "" ||
-        category.trim() === "" ||
-        description.trim() === "" ||
-        dueDate.trim() === "") {
+//     let priority =
+//         document.getElementById("priority").value;
 
-        alert("Please fill all fields");
+//     let dueDate =
+//         document.getElementById("dueDate").value;
 
-        return;
+//     let status =
+//         document.getElementById("status").value;
+
+//     if (name.trim() === "" ||
+//         category.trim() === "" ||
+//         description.trim() === "" ||
+//         dueDate.trim() === "") {
+
+//         alert("Please fill all fields");
+
+//         return;
+//     }
+
+
+//     let task = {
+
+//         name: name,
+
+//         category: category,
+
+//         description: description,
+
+//         priority: priority,
+
+//         dueDate: dueDate,
+
+//         status: status
+//     };
+
+//     fetch("http://localhost:8000/tasks", {
+
+//         method: editId == null ? "POST" : "PUT",
+
+//         headers: {
+
+//             "Content-Type": "application/json"
+//         },
+
+//         body: JSON.stringify(
+
+//             editId == null
+
+//                 ? task
+
+//                 : {
+
+//                     id: editId,
+
+//                     name: name,
+
+//                     category: category,
+
+//                     description: description,
+
+//                     priority: priority,
+
+//                     dueDate: dueDate,
+
+//                     status: status
+//                 }
+//         )
+
+//     })
+
+//         .then(response => response.json())
+
+//         .then(data => {
+
+//             editId = null;
+
+//             alert(data.message);
+
+//             loadTasks();
+
+//             document.getElementById("taskForm").reset();
+
+//             document.getElementById("taskForm").style.display =
+//                 "none";
+//         });
+// }
+
+// function deleteTask(id) {
+
+//     fetch(`http://localhost:8000/tasks?id=${id}`, {
+
+//         method: "DELETE"
+
+//     })
+
+//         .then(response => response.json())
+
+//         .then(data => {
+
+//             alert(data.message);
+
+//             loadTasks();
+//         });
+// }
+
+// function editTask(task) {
+
+//     editId = task.id;
+
+//     document.getElementById("name").value =
+//         task.name;
+
+//     document.getElementById("category").value =
+//         task.category;
+
+//     document.getElementById("description").value =
+//         task.description;
+
+//     document.getElementById("priority").value =
+//         task.priority;
+
+//     document.getElementById("dueDate").value =
+//         task.dueDate;
+
+//     document.getElementById("status").value =
+//         task.status;
+
+//     document.getElementById("taskForm").style.display =
+//         "block";
+// }
+
+
+// function loadTasks() {
+
+//     fetch("http://localhost:8000/tasks")
+
+//         .then(response => response.json())
+
+//         .then(result => {
+
+//             let tasks = result.data;
+
+//             let table =
+//                 document.getElementById("taskTable")
+//                     .getElementsByTagName("tbody")[0];
+
+//             table.innerHTML = "";
+
+//             tasks.forEach((task, index) => {
+
+//                 let row = table.insertRow();
+
+//                 row.innerHTML = `
+
+//                 <td>${index + 1}</td>
+
+//                 <td>${task.name}</td>
+
+//                 <td>${task.category}</td>
+
+//                 <td>${task.description}</td>
+
+//                 <td>${task.priority}</td>
+
+//                 <td>${task.dueDate}</td>
+
+//                 <td>${task.status}</td>
+
+//                 <td>
+
+//                     <button class="edit-btn"
+//                         onclick='editTask(${JSON.stringify(task)})'>
+//                         Edit
+//                     </button>
+
+//                     <button class="delete-btn"
+//                         onclick="deleteTask(${task.id})">
+//                         Delete
+//                     </button>
+
+//                 </td>
+//             `;
+//             });
+//         });
+// }
+
+// loadTasks();
+const tasksTableBody = document.getElementById("tasksTableBody");
+
+const tasks = [
+
+    {
+        name: "UI Design",
+        category: "Frontend",
+        description: "Create dashboard layout",
+        dueDate: "12 Aug 2025",
+        status: "In Progress",
+        priority: "High"
+    },
+
+    {
+        name: "Bug Fixing",
+        category: "Testing",
+        description: "Fix alignment and UI issues",
+        dueDate: "18 Aug 2025",
+        status: "Done",
+        priority: "Low"
+    },
+
+    {
+        name: "API Integration",
+        category: "Backend",
+        description: "Connect frontend with API",
+        dueDate: "20 Aug 2025",
+        status: "To Do",
+        priority: "High"
+    },
+
+    {
+        name: "Database Setup",
+        category: "Database",
+        description: "Configure MySQL database",
+        dueDate: "22 Aug 2025",
+        status: "In Progress",
+        priority: "Medium"
+    },
+
+    {
+        name: "Testing Module",
+        category: "QA",
+        description: "Test all application modules",
+        dueDate: "25 Aug 2025",
+        status: "Done",
+        priority: "Low"
     }
 
+];
 
-    let task = {
 
-        name: name,
+tasks.forEach((task, index) => {
 
-        category: category,
+    tasksTableBody.innerHTML += `
 
-        description: description,
+        <tr>
 
-        priority: priority,
+            <td>${index + 1}</td>
 
-        dueDate: dueDate,
+            <td>${task.name}</td>
 
-        status: status
-    };
+            <td>${task.category}</td>
 
-    fetch("http://localhost:8000/tasks", {
+            <td>${task.description}</td>
 
-        method: editId == null ? "POST" : "PUT",
+            <td>${task.dueDate}</td>
 
-        headers: {
+            <td>
 
-            "Content-Type": "application/json"
-        },
+                <span class="status-pill progress-pill">
 
-        body: JSON.stringify(
+                    ${task.status}
 
-            editId == null
+                </span>
 
-                ? task
+            </td>
 
-                : {
+            <td>
 
-                    id: editId,
+                <span class="priority-pill high-pill">
 
-                    name: name,
+                    ${task.priority}
 
-                    category: category,
+                </span>
 
-                    description: description,
+            </td>
 
-                    priority: priority,
+            <td>
 
-                    dueDate: dueDate,
+                <div class="action-buttons">
 
-                    status: status
-                }
-        )
+                    <button class="edit-btn">
 
-    })
+                        <img src="edit-svgrepo-com.svg"
+                             class="action-icon">
 
-        .then(response => response.json())
-
-        .then(data => {
-
-            editId = null;
-
-            alert(data.message);
-
-            loadTasks();
-
-            document.getElementById("taskForm").reset();
-
-            document.getElementById("taskForm").style.display =
-                "none";
-        });
-}
-
-function deleteTask(id) {
-
-    fetch(`http://localhost:8000/tasks?id=${id}`, {
-
-        method: "DELETE"
-
-    })
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            alert(data.message);
-
-            loadTasks();
-        });
-}
-
-function editTask(task) {
-
-    editId = task.id;
-
-    document.getElementById("name").value =
-        task.name;
-
-    document.getElementById("category").value =
-        task.category;
-
-    document.getElementById("description").value =
-        task.description;
-
-    document.getElementById("priority").value =
-        task.priority;
-
-    document.getElementById("dueDate").value =
-        task.dueDate;
-
-    document.getElementById("status").value =
-        task.status;
-
-    document.getElementById("taskForm").style.display =
-        "block";
-}
-
-
-function loadTasks() {
-
-    fetch("http://localhost:8000/tasks")
-
-        .then(response => response.json())
-
-        .then(result => {
-
-            let tasks = result.data;
-
-            let table =
-                document.getElementById("taskTable")
-                    .getElementsByTagName("tbody")[0];
-
-            table.innerHTML = "";
-
-            tasks.forEach((task, index) => {
-
-                let row = table.insertRow();
-
-                row.innerHTML = `
-
-                <td>${index + 1}</td>
-
-                <td>${task.name}</td>
-
-                <td>${task.category}</td>
-
-                <td>${task.description}</td>
-
-                <td>${task.priority}</td>
-
-                <td>${task.dueDate}</td>
-
-                <td>${task.status}</td>
-
-                <td>
-
-                    <button class="edit-btn"
-                        onclick='editTask(${JSON.stringify(task)})'>
-                        Edit
                     </button>
 
-                    <button class="delete-btn"
-                        onclick="deleteTask(${task.id})">
-                        Delete
+                    <button class="delete-btn">
+
+                        <img src="delete-svgrepo-com.svg"
+                             class="action-icon">
+
                     </button>
 
-                </td>
-            `;
-            });
-        });
-}
+                </div>
 
-loadTasks();
+            </td>
+
+        </tr>
+
+    `;
+
+});
+

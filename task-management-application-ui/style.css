@@ -360,7 +360,11 @@ h1 {
 
     padding: 20px;
 
-    overflow-x: auto;
+    /* overflow-x: auto; */
+
+    max-height: 500px; 
+    
+    overflow-y: auto;
 
 }
 

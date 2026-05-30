@@ -134,7 +134,7 @@
 
                     </div>
 
-                    <button class="add-task-btn">
+                    <button class="add-task-btn" id="openModal">
 
                         <img src="plus-large-svgrepo-com.svg" class="btn-icon">
 
@@ -149,37 +149,39 @@
 
             <div class="table-section">
 
-                <table>
+                <div class="table-scroll">
 
-                    <thead>
+                    <table>
 
-                        <tr>
+                        <thead>
 
-                            <th>S.No</th>
+                            <tr>
 
-                            <th>Task Name</th>
+                                <th>S.No</th>
 
-                            <th>Category</th>
+                                <th>Task Name</th>
 
-                            <th>Description</th>
+                                <th>Category</th>
 
-                            <th>Due Date</th>
+                                <th>Description</th>
 
-                            <th>Status</th>
+                                <th>Due Date</th>
 
-                            <th>Priority</th>
+                                <th>Status</th>
 
-                            <th>Actions</th>
+                                <th>Priority</th>
 
-                        </tr>
+                                <th>Actions</th>
 
-                    </thead>
+                            </tr>
 
-                    <tbody id="tasksTableBody">
+                        </thead>
 
-                    </tbody>
+                        <tbody id="tasksTableBody">
 
-                    <!-- <tbody>
+                        </tbody>
+
+                        <!-- <tbody>
 
                         <tr>
 
@@ -469,7 +471,9 @@
 
                     </tbody> -->
 
-                </table>
+                    </table>
+
+                </div>
 
                 <div class="table-footer">
 
@@ -497,6 +501,76 @@
 
         </div>
 
+    </div>
+
+    <div class="modal-overlay" id="taskModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+                <h3>Add / Update Task</h3>
+
+                <button class="close-btn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label>Task Name <span>*</span></label>
+                    <input type="text" id="taskName" placeholder="Enter task name">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Category <span>*</span></label>
+                    <input type="text" id="category">
+                </div>
+
+                <div class="form-group">
+
+                    <label>Description</label>
+                    <textarea id="description" placeholder="Enter description"></textarea>
+                </div>
+
+                <div class="form-group">
+
+                    <label>Due Date <span>*</span></label>
+                    <input type="date" id="dueDate">
+                </div>
+
+                <div class="form-group">
+
+                    <label>Status <span>*</span></label>
+
+                    <select id="status">
+                        <option>Select status</option>
+                        <option>TO_DO</option>
+                        <option>IN_PROGRESS</option>
+                        <option>DONE</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Priority <span>*</span></label>
+                    <select id="priority">
+                        <option>Select priority</option>
+                        <option>HIGH</option>
+                        <option>MEDIUM</option>
+                        <option>LOW</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn">Cancel</button>
+                <button class="save-btn">Save Task</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

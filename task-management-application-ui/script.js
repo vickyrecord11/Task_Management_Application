@@ -1,6 +1,6 @@
 // let editRow = null;
 
- //let editId = null;
+//let editId = null;
 
 
 // function showForm() {
@@ -167,6 +167,8 @@ function loadTasks() {
 
             let tasks = result.data;
 
+            window.tasksData = tasks;
+
             const tasksTableBody =
                 document.getElementById("tasksTableBody");
 
@@ -175,6 +177,7 @@ function loadTasks() {
             tasks.forEach((task, index) => {
 
                 let row = tasksTableBody.insertRow();
+                row.dataset.id = task.id;
 
                 row.innerHTML = `
 
@@ -212,14 +215,14 @@ function loadTasks() {
 
                     <div class="action-buttons">
 
-                    <button class="edit-btn">
+                    <button class="edit-btn" data-id="${task.id}">
 
                         <img src="edit-svgrepo-com.svg"
                              class="action-icon">
 
                     </button>
 
-                    <button class="delete-btn">
+                    <button class="delete-btn" data-id="${task.id}">
 
                         <img src="delete-svgrepo-com.svg"
                              class="action-icon">
@@ -235,6 +238,169 @@ function loadTasks() {
 }
 
 loadTasks();
+
+const modal = document.getElementById("taskModal");
+
+document
+    .getElementById("openModal")
+    .addEventListener("click", () => {
+
+        window.editTaskId = null;
+
+        modal.style.display = "flex";
+    });
+
+document
+    .querySelector(".close-btn")
+    .addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+document
+    .querySelector(".cancel-btn")
+    .addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+document.addEventListener("click", function (event) {
+
+    const deleteBtn = event.target.closest(".delete-btn");
+
+    if (!deleteBtn) return;
+
+    const taskId = deleteBtn.dataset.id;
+
+    fetch(`http://localhost:8000/tasks?id=${taskId}`, {
+        method: "DELETE"
+    })
+        .then(() => {
+            loadTasks();
+        });
+
+});
+
+document.addEventListener("click", function (event) {
+
+    const editBtn =
+        event.target.closest(".edit-btn");
+
+    if (!editBtn) return;
+
+    const taskId =
+        editBtn.dataset.id;
+
+    const task =
+        window.tasksData.find(
+            t => t.id == taskId
+        );
+
+    if (!task) return;
+
+    window.editTaskId = task.id;
+
+    document.getElementById("taskName").value =
+        task.name;
+
+    document.getElementById("category").value =
+        task.category;
+
+    document.getElementById("description").value =
+        task.description;
+
+    document.getElementById("dueDate").value =
+        task.dueDate;
+
+    document.getElementById("status").value =
+        task.status;
+
+    document.getElementById("priority").value =
+        task.priority;
+
+    document.getElementById("taskModal")
+        .style.display = "flex";
+});
+
+// document.querySelector(".save-btn")
+//     .addEventListener("click", function () {
+
+//         console.log("SAVE CLICKED");
+
+//     });
+
+// console.log("SCRIPT LOADED");
+
+document.querySelector(".save-btn")
+    .addEventListener("click", function () {
+
+        const taskData = {
+
+            name: document.getElementById("taskName").value,
+
+            category: document.getElementById("category").value,
+
+            description: document.getElementById("description").value,
+
+            dueDate: document.getElementById("dueDate").value,
+
+            status: document.getElementById("status").value,
+
+            priority: document.getElementById("priority").value
+
+        };
+
+        if(window.editTaskId){
+
+            taskData.id = window.editTaskId;
+        
+
+        fetch(
+            `http://localhost:8000/tasks?id=${window.editTaskId}`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(taskData)
+            }
+        )
+            .then(response => response.json())
+
+            .then(result => {
+
+                console.log(result);
+
+                modal.style.display = "none";
+
+                loadTasks();
+
+            });
+
+        }else{
+
+        fetch(
+            "http://localhost:8000/tasks",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(taskData)
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+
+            console.log(result);
+
+            modal.style.display = "none";
+
+            loadTasks();
+        });
+    }
+
+    });
 // const tasksTableBody = document.getElementById("tasksTableBody");
 
 // const tasks = [

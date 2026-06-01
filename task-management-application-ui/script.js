@@ -155,7 +155,8 @@
 //     document.getElementById("taskForm").style.display =
 //         "block";
 // }
-
+let currentPage = 1;
+const tasksPerPage = 5;
 
 function loadTasks() {
 
@@ -169,51 +170,80 @@ function loadTasks() {
 
             window.tasksData = tasks;
 
-            const tasksTableBody =
-                document.getElementById("tasksTableBody");
+            renderTasks(tasks);
 
-            tasksTableBody.innerHTML = "";
+        });
+}
+loadTasks();
 
-            tasks.forEach((task, index) => {
+function renderTasks(tasks) {
 
-                let row = tasksTableBody.insertRow();
-                row.dataset.id = task.id;
+    const tasksTableBody =
+        document.getElementById("tasksTableBody");
 
-                row.innerHTML = `
 
-                <td>${index + 1}</td>
+    tasksTableBody.innerHTML = "";
 
-                <td>${task.name}</td>
+    const startIndex = (currentPage - 1) * tasksPerPage;
 
-                <td>${task.category}</td>
+    const endIndex = startIndex + tasksPerPage;
 
-                <td>${task.description}</td>
+    const paginatedTasks = tasks.slice(startIndex, endIndex);
 
-                <td>${task.dueDate}</td>
+    document.getElementById("pageNumber")
+    .textContent = currentPage;
 
-                <td>
-                
+    const startTask =
+        startIndex + 1;
+
+    const endTask =
+        Math.min(endIndex, tasks.length);
+
+    document.getElementById("taskCount")
+        .textContent =
+        `Showing ${startTask} to ${endTask} of ${tasks.length} tasks`;
+
+    paginatedTasks.forEach((task, index) => {
+
+        let row = tasksTableBody.insertRow();
+
+        row.dataset.id = task.id;
+
+        row.innerHTML = `
+
+            <td>${startIndex + index + 1}</td>
+
+            <td>${task.name}</td>
+
+            <td>${task.category}</td>
+
+            <td>${task.description}</td>
+
+            <td>${task.dueDate}</td>
+
+            <td>
+
                 <span class="status-pill progress-pill">
-                
-                    ${formatStatus(task.status)} 
-                
-                </span> 
-                
-                </td> 
-                
-                <td> 
-                
-                <span class="priority-pill high-pill">
-                
-                    ${formatPriority(task.priority)} 
-                
+
+                    ${formatStatus(task.status)}
+
                 </span>
-                
-                </td>
 
-                <td>
+            </td>
 
-                    <div class="action-buttons">
+            <td>
+
+                <span class="priority-pill high-pill">
+
+                    ${formatPriority(task.priority)}
+
+                </span>
+
+            </td>
+
+            <td>
+
+                <div class="action-buttons">
 
                     <button class="edit-btn" data-id="${task.id}">
 
@@ -231,13 +261,11 @@ function loadTasks() {
 
                 </div>
 
-                </td>
-            `;
-            });
-        });
-}
+            </td>
 
-loadTasks();
+        `;
+    });
+}
 
 const modal = document.getElementById("taskModal");
 
@@ -436,6 +464,53 @@ document.querySelector(".save-btn")
     }
 
     });
+
+document
+    .getElementById("searchInput")
+    .addEventListener("input", function () {
+
+        const searchText =
+            this.value.toLowerCase();
+
+        const filteredTasks =
+            window.tasksData.filter(task =>
+
+                task.name.toLowerCase()
+                    .includes(searchText)
+
+            );
+
+        renderTasks(filteredTasks);
+    });
+
+document
+        .getElementById("prevBtn")
+        .addEventListener("click", () => {
+
+            if(currentPage > 1){
+
+                currentPage--;
+
+                renderTasks(window.tasksData);
+
+            }
+        });
+
+document
+        .getElementById("nextBtn")
+        .addEventListener("click", () => {
+
+            const totalPages =
+                            Math.ceil(window.tasksData.length / tasksPerPage);
+
+            if(currentPage < totalPages){
+
+                currentPage++;
+
+                renderTasks(window.tasksData);
+
+            }
+        });
 // const tasksTableBody = document.getElementById("tasksTableBody");
 
 // const tasks = [

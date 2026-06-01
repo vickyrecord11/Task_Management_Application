@@ -364,7 +364,7 @@ h1 {
 
     flex-direction: column;
 
-    height: 500px;
+    /* height: 500px; */
 
     /* overflow-x: auto; */
 
@@ -541,9 +541,11 @@ tbody tr:hover {
     justify-content: space-between;
     align-items: center;
 
-    padding: 7px 20px;
+    padding: 12px 8px;
 
     border-top: 1px solid #e5e7eb;
+
+    margin-bottom: -19px;
 }
 
 .table-footer p {
@@ -556,7 +558,8 @@ tbody tr:hover {
     align-items: center;
     gap: 8px;
     justify-content: center;
-    margin-right: 75px;
+    margin-right: 78px;
+    /* margin-top: 55px; */
 }
 
 .page-btn {

@@ -195,7 +195,7 @@ function loadTasks() {
                 
                 <span class="status-pill progress-pill">
                 
-                    ${task.status} 
+                    ${formatStatus(task.status)} 
                 
                 </span> 
                 
@@ -205,7 +205,7 @@ function loadTasks() {
                 
                 <span class="priority-pill high-pill">
                 
-                    ${task.priority} 
+                    ${formatPriority(task.priority)} 
                 
                 </span>
                 
@@ -241,11 +241,46 @@ loadTasks();
 
 const modal = document.getElementById("taskModal");
 
+function formatStatus(status) {
+
+    const statusMap = {
+        TO_DO: "To Do",
+        IN_PROGRESS: "In Progress",
+        DONE: "Done"
+    };
+
+    return statusMap[status] || status;
+}
+
+function formatPriority(priority) {
+
+    const priorityMap = {
+        HIGH: "High",
+        MEDIUM: "Medium",
+        LOW: "Low"
+    };
+
+    return priorityMap[priority] || priority;
+}
+
+
+function clearForm() {
+
+    document.getElementById("taskName").value = "";
+    document.getElementById("category").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("dueDate").value = "";
+    document.getElementById("status").value = "";
+    document.getElementById("priority").value = "";
+}
+
 document
     .getElementById("openModal")
     .addEventListener("click", () => {
 
         window.editTaskId = null;
+
+        clearForm();
 
         modal.style.display = "flex";
     });

@@ -130,7 +130,7 @@
 
                         <img src="search-svgrepo-com.svg" class="search-icon">
 
-                        <input type="text" placeholder="Search tasks...">
+                        <input type="text" id="searchInput" placeholder="Search tasks...">
 
                     </div>
 
@@ -545,10 +545,10 @@
                     <label>Status <span>*</span></label>
 
                     <select id="status">
-                        <option>Select status</option>
-                        <option>TO_DO</option>
-                        <option>IN_PROGRESS</option>
-                        <option>DONE</option>
+                        <option value="">Select status</option>
+                        <option value="TO_DO">To Do</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="DONE">Done</option>
                     </select>
 
                 </div>
@@ -557,10 +557,10 @@
 
                     <label>Priority <span>*</span></label>
                     <select id="priority">
-                        <option>Select priority</option>
-                        <option>HIGH</option>
-                        <option>MEDIUM</option>
-                        <option>LOW</option>
+                        <option value="">Select priority</option>
+                        <option value="HIGH">High</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="LOW">Low</option>
                     </select>
                 </div>
             </div>

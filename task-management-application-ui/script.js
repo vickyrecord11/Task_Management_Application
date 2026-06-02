@@ -172,6 +172,8 @@ function loadTasks() {
 
             renderTasks(tasks);
 
+            updateSummary(tasks);
+
         });
 }
 loadTasks();
@@ -511,6 +513,35 @@ document
 
             }
         });
+
+function updateSummary(tasks) {
+
+    let total = tasks.length;
+
+    let todo = 0;
+    let progress = 0;
+    let completed = 0;
+
+    tasks.forEach(task => {
+
+        if(task.status === "TO_DO") {
+            todo++;
+        }
+
+        else if(task.status === "IN_PROGRESS") {
+            progress++;
+        }
+
+        else if(task.status === "DONE") {
+            completed++;
+        }
+    });
+
+    document.getElementById("totalTasks").textContent = total;
+    document.getElementById("todoTasks").textContent = todo;
+    document.getElementById("progressTasks").textContent = progress;
+    document.getElementById("completedTasks").textContent = completed;
+}
 // const tasksTableBody = document.getElementById("tasksTableBody");
 
 // const tasks = [

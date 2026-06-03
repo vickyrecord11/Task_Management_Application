@@ -193,7 +193,7 @@ function renderTasks(tasks) {
     const paginatedTasks = tasks.slice(startIndex, endIndex);
 
     document.getElementById("pageNumber")
-    .textContent = currentPage;
+        .textContent = currentPage;
 
     const startTask =
         startIndex + 1;
@@ -413,57 +413,57 @@ document.querySelector(".save-btn")
 
         };
 
-        if(window.editTaskId){
+        if (window.editTaskId) {
 
             taskData.id = window.editTaskId;
-        
 
-        fetch(
-            `http://localhost:8000/tasks?id=${window.editTaskId}`,
-            {
-                method: "PUT",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+            fetch(
+                `http://localhost:8000/tasks?id=${window.editTaskId}`,
+                {
+                    method: "PUT",
 
-                body: JSON.stringify(taskData)
-            }
-        )
-            .then(response => response.json())
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-            .then(result => {
+                    body: JSON.stringify(taskData)
+                }
+            )
+                .then(response => response.json())
 
-                console.log(result);
+                .then(result => {
 
-                modal.style.display = "none";
+                    console.log(result);
 
-                loadTasks();
+                    modal.style.display = "none";
 
-            });
+                    loadTasks();
 
-        }else{
+                });
 
-        fetch(
-            "http://localhost:8000/tasks",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(taskData)
-            }
-        )
-        .then(response => response.json())
-        .then(result => {
+        } else {
 
-            console.log(result);
+            fetch(
+                "http://localhost:8000/tasks",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(taskData)
+                }
+            )
+                .then(response => response.json())
+                .then(result => {
 
-            modal.style.display = "none";
+                    console.log(result);
 
-            loadTasks();
-        });
-    }
+                    modal.style.display = "none";
+
+                    loadTasks();
+                });
+        }
 
     });
 
@@ -486,33 +486,122 @@ document
     });
 
 document
-        .getElementById("prevBtn")
-        .addEventListener("click", () => {
+    .getElementById("sortSelect")
+    .addEventListener("change", function () {
 
-            if(currentPage > 1){
+        let sortedTasks = [...window.tasksData];
 
-                currentPage--;
+        const sortType = this.value;
 
-                renderTasks(window.tasksData);
+        switch (sortType) {
 
-            }
-        });
+            case "nameAsc":
+                sortedTasks.sort((a, b) =>
+                    a.name.localeCompare(b.name));
+                break;
+
+            case "nameDesc":
+                sortedTasks.sort((a, b) =>
+                    b.name.localeCompare(a.name));
+                break;
+
+            case "categoryAsc":
+                sortedTasks.sort((a, b) =>
+                    a.category.localeCompare(b.category));
+                break;
+
+            case "categoryDesc":
+                sortedTasks.sort((a, b) =>
+                    b.category.localeCompare(a.category));
+                break;
+
+            case "dateAsc":
+                sortedTasks.sort((a, b) =>
+                    new Date(a.dueDate) -
+                    new Date(b.dueDate));
+                break;
+
+            case "dateDesc":
+                sortedTasks.sort((a, b) =>
+                    new Date(b.dueDate) -
+                    new Date(a.dueDate));
+                break;
+
+            case "statusAsc":
+                sortedTasks.sort((a, b) =>
+                    a.status.localeCompare(b.status));
+                break;
+
+            case "statusDesc":
+                sortedTasks.sort((a, b) =>
+                    b.status.localeCompare(a.status));
+                break;
+
+            case "priorityHighLow":
+
+                const priorityOrderDesc = {
+                    HIGH: 3,
+                    MEDIUM: 2,
+                    LOW: 1
+                };
+
+                sortedTasks.sort((a, b) =>
+                    priorityOrderDesc[b.priority] -
+                    priorityOrderDesc[a.priority]);
+
+                break;
+
+            case "priorityLowHigh":
+
+                const priorityOrderAsc = {
+                    HIGH: 3,
+                    MEDIUM: 2,
+                    LOW: 1
+                };
+
+                sortedTasks.sort((a, b) =>
+                    priorityOrderAsc[a.priority] -
+                    priorityOrderAsc[b.priority]);
+
+                break;
+
+
+
+        }
+
+        currentPage = 1;
+        renderTasks(sortedTasks);
+
+    });
 
 document
-        .getElementById("nextBtn")
-        .addEventListener("click", () => {
+    .getElementById("nextBtn")
+    .addEventListener("click", () => {
 
-            const totalPages =
-                            Math.ceil(window.tasksData.length / tasksPerPage);
+        const totalPages =
+            Math.ceil(window.tasksData.length / tasksPerPage);
 
-            if(currentPage < totalPages){
+        if (currentPage < totalPages) {
 
-                currentPage++;
+            currentPage++;
 
-                renderTasks(window.tasksData);
+            renderTasks(window.tasksData);
 
-            }
-        });
+        }
+    });
+
+document
+    .getElementById("prevBtn")
+    .addEventListener("click", () => {
+
+        if (currentPage > 1) {
+
+            currentPage--;
+
+            renderTasks(window.tasksData);
+
+        }
+    });
 
 function updateSummary(tasks) {
 
@@ -524,15 +613,15 @@ function updateSummary(tasks) {
 
     tasks.forEach(task => {
 
-        if(task.status === "TO_DO") {
+        if (task.status === "TO_DO") {
             todo++;
         }
 
-        else if(task.status === "IN_PROGRESS") {
+        else if (task.status === "IN_PROGRESS") {
             progress++;
         }
 
-        else if(task.status === "DONE") {
+        else if (task.status === "DONE") {
             completed++;
         }
     });

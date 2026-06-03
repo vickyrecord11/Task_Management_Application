@@ -308,6 +308,42 @@ h1 {
     background: transparent;
 }
 
+#sortSelect {
+
+    appearance: none;
+
+    width: 180px;
+    height: 40px;
+
+    background-image: url("dropdown-arrow-svgrepo-com.svg");
+
+    background-position: right 12px center;
+    background-size: 16px;
+
+    background-repeat: no-repeat;
+
+    padding: 0 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background-color: #fff;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    color: #374151;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+#sortSelect:hover {
+    border-color: #2563eb;
+}
+
+
 .add-task-btn {
 
     display: flex;

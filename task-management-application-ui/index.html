@@ -38,19 +38,7 @@
                 <h2 id="tasks-btn" class="menu-item active-menu">
                     <img src="tasks.svg" class="icon2">
 
-                    <span>Tasks</span>
-                </h2>
-
-
-                <h2 id="categories-btn" class="menu-item">
-                    <img src="category.svg" class="icon2">
-                    <span>Categories</span>
-                </h2>
-
-
-                <h2 id="priority-btn" class="menu-item">
-                    <img src="priority.svg" class="icon2">
-                    <span>Priority</span>
+                    <span>Dashboard</span>
                 </h2>
 
             </div>
@@ -134,11 +122,38 @@
 
                     </div>
 
+                    <select id="categoryFilter">
+                        <option value="ALL">Category</option>
+                        <option value="Backend">Backend</option>
+                        <option value="Frontend">Frontend</option>
+                        <option value="Database">Database</option>
+                        <option value="Testing">Testing</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <select id="statusFilter">
+                        <option value="ALL">Status</option>
+                        <option value="TO_DO">To Do</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="DONE">Done</option>
+                    </select>
+
+                    <select id="priorityFilter">
+                        <option value="ALL">Priority</option>
+                        <option value="HIGH">High</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="LOW">Low</option>
+                    </select>
+
+                    </select>
+
+
                     <select id="sortSelect">
 
                         <option value="">Sort By</option>
-   
-                        <option value="nameAsc">Task Name (A-Z)</option>    
+
+                        <option value="nameAsc">Task Name (A-Z)</option>
                         <option value="nameDesc">Task Name (Z-A)</option>
 
                         <option value="categoryAsc">Category (A-Z)</option>

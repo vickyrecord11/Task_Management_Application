@@ -157,6 +157,7 @@
 // }
 let currentPage = 1;
 const tasksPerPage = 5;
+let currentTasks = [];
 
 function loadTasks() {
 
@@ -170,7 +171,9 @@ function loadTasks() {
 
             window.tasksData = tasks;
 
-            renderTasks(tasks);
+            currentTasks = tasks;
+
+            renderTasks(currentTasks);
 
             updateSummary(tasks);
 
@@ -467,29 +470,104 @@ document.querySelector(".save-btn")
 
     });
 
+function getFilteredTasks() {
+
+    let filteredTasks = [...window.tasksData];
+
+    const searchText = document.getElementById("searchInput").value.toLowerCase();
+
+    const category = document.getElementById("categoryFilter").value;
+
+    const status = document.getElementById("statusFilter").value;
+
+    const priority = document.getElementById("priorityFilter").value;
+
+    if (searchText) {
+
+        filteredTasks = filteredTasks.filter(task =>
+            task.name.toLowerCase().includes(searchText)
+        );
+    }
+
+    if (category !== "ALL") {
+
+        filteredTasks = filteredTasks.filter(task =>
+            task.category === category
+        );
+
+    }
+
+    if (status !== "ALL") {
+
+        filteredTasks = filteredTasks.filter(task =>
+            task.status === status
+        );
+    }
+
+
+    if (priority !== "ALL") {
+
+        filteredTasks = filteredTasks.filter(task =>
+            task.priority === priority
+        );
+    }
+
+    return filteredTasks;
+
+}
+
 document
     .getElementById("searchInput")
     .addEventListener("input", function () {
 
-        const searchText =
-            this.value.toLowerCase();
+        currentPage = 1;
 
-        const filteredTasks =
-            window.tasksData.filter(task =>
+        currentTasks = getFilteredTasks();
 
-                task.name.toLowerCase()
-                    .includes(searchText)
-
-            );
-
-        renderTasks(filteredTasks);
+        renderTasks(currentTasks);
     });
+
+document
+    .getElementById("categoryFilter")
+    .addEventListener("change", () => {
+
+        currentPage = 1;
+
+        currentTasks = getFilteredTasks();
+
+        renderTasks(currentTasks);
+    });
+
+document
+    .getElementById("statusFilter")
+    .addEventListener("change", () => {
+
+        currentPage = 1;
+
+        currentTasks = getFilteredTasks();
+
+        renderTasks(currentTasks);
+
+    });
+
+document
+    .getElementById("priorityFilter")
+    .addEventListener("change", () => {
+
+        currentPage = 1;
+
+        currentTasks = getFilteredTasks();
+
+        renderTasks(currentTasks);
+
+    });
+
 
 document
     .getElementById("sortSelect")
     .addEventListener("change", function () {
 
-        let sortedTasks = [...window.tasksData];
+        let sortedTasks = getFilteredTasks();
 
         const sortType = this.value;
 
@@ -570,7 +648,9 @@ document
         }
 
         currentPage = 1;
-        renderTasks(sortedTasks);
+        currentTasks = sortedTasks;
+
+        renderTasks(currentTasks);
 
     });
 
@@ -579,13 +659,13 @@ document
     .addEventListener("click", () => {
 
         const totalPages =
-            Math.ceil(window.tasksData.length / tasksPerPage);
+            Math.ceil(currentTasks.length / tasksPerPage);
 
         if (currentPage < totalPages) {
 
             currentPage++;
 
-            renderTasks(window.tasksData);
+            renderTasks(currentTasks);
 
         }
     });
@@ -598,7 +678,7 @@ document
 
             currentPage--;
 
-            renderTasks(window.tasksData);
+            renderTasks(currentTasks);
 
         }
     });

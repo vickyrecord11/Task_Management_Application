@@ -274,6 +274,42 @@ function renderTasks(tasks) {
 
 const modal = document.getElementById("taskModal");
 
+const categoryBtn =
+    document.getElementById("categoryBtn");
+
+const categoryMenu =
+    document.getElementById("categoryMenu");
+
+categoryBtn.addEventListener("click", () => {
+
+    categoryMenu.classList.toggle("show");
+
+});
+
+const statusBtn =
+document.getElementById("statusBtn");
+
+const statusMenu =
+document.getElementById("statusMenu");
+
+statusBtn.addEventListener("click", () => {
+
+    statusMenu.classList.toggle("show");
+
+});
+
+const priorityBtn =
+document.getElementById("priorityBtn");
+
+const priorityMenu =
+document.getElementById("priorityMenu");
+
+priorityBtn.addEventListener("click", () => {
+
+    priorityMenu.classList.toggle("show");
+
+});
+
 function formatStatus(status) {
 
     const statusMap = {
@@ -295,6 +331,64 @@ function formatPriority(priority) {
 
     return priorityMap[priority] || priority;
 }
+
+function getStatusClass(status) {
+
+    if (status === "TO_DO") {
+        return "todo-pill";
+    }
+
+    if (status === "IN_PROGRESS") {
+        return "progress-pill";
+    }
+
+    return "done-pill";
+}
+
+function getPriorityClass(priority) {
+
+    if (priority === "HIGH") {
+        return "high-pill";
+    }
+
+    if (priority === "MEDIUM") {
+        return "medium-pill";
+    }
+
+    return "low-pill";
+}
+
+function getSelectedCategories() {
+
+    return [...document.querySelectorAll(
+        "#categoryMenu input:checked"
+    )].map(item => item.value);
+
+}
+
+function getSelectedStatuses() {
+
+    return [...document.querySelectorAll(
+        "#statusMenu input:checked"
+    )].map(item => item.value);
+
+}
+
+function getSelectedPriorities() {
+
+    return [...document.querySelectorAll(
+        "#priorityMenu input:checked"
+    )].map(item => item.value);
+
+}
+
+// function getSelectedValues(selectId) {
+
+//     return [...document.getElementById(selectId)
+//         .selectedOptions]
+//         .map(option => option.value);
+
+// }
 
 
 function clearForm() {
@@ -476,11 +570,20 @@ function getFilteredTasks() {
 
     const searchText = document.getElementById("searchInput").value.toLowerCase();
 
-    const category = document.getElementById("categoryFilter").value;
+    // const category = document.getElementById("categoryFilter").value;
 
-    const status = document.getElementById("statusFilter").value;
+    const selectedCategories =
+        getSelectedCategories();
 
-    const priority = document.getElementById("priorityFilter").value;
+    // const status = document.getElementById("statusFilter").value;
+
+    const selectedStatuses =
+        getSelectedStatuses();
+
+    // const priority = document.getElementById("priorityFilter").value;
+
+    const selectedPriorities =
+        getSelectedPriorities();
 
     if (searchText) {
 
@@ -489,28 +592,35 @@ function getFilteredTasks() {
         );
     }
 
-    if (category !== "ALL") {
+    if (selectedCategories.length > 0) {
 
-        filteredTasks = filteredTasks.filter(task =>
-            task.category === category
-        );
+        filteredTasks =
+            filteredTasks.filter(task =>
+                selectedCategories.includes(
+                    task.category
+                )
+            );
 
     }
 
-    if (status !== "ALL") {
+    if (selectedStatuses.length > 0) {
 
-        filteredTasks = filteredTasks.filter(task =>
-            task.status === status
-        );
+        filteredTasks =
+            filteredTasks.filter(task =>
+                selectedStatuses.includes(task.status)
+            );
+
     }
 
+    if (selectedPriorities.length > 0) {
 
-    if (priority !== "ALL") {
+        filteredTasks =
+            filteredTasks.filter(task =>
+                selectedPriorities.includes(task.priority)
+            );
 
-        filteredTasks = filteredTasks.filter(task =>
-            task.priority === priority
-        );
     }
+
 
     return filteredTasks;
 
@@ -528,40 +638,70 @@ document
     });
 
 document
-    .getElementById("categoryFilter")
-    .addEventListener("change", () => {
+    .querySelectorAll(
+        "#categoryMenu input"
+    )
+    .forEach(checkbox => {
 
-        currentPage = 1;
+        checkbox.addEventListener(
+            "change",
+            () => {
 
-        currentTasks = getFilteredTasks();
+                currentPage = 1;
 
-        renderTasks(currentTasks);
+                currentTasks =
+                    getFilteredTasks();
+
+                renderTasks(currentTasks);
+
+            }
+        );
+
     });
 
 document
-    .getElementById("statusFilter")
-    .addEventListener("change", () => {
+.querySelectorAll(
+    "#statusMenu input"
+)
+.forEach(checkbox => {
 
-        currentPage = 1;
+    checkbox.addEventListener(
+        "change",
+        () => {
 
-        currentTasks = getFilteredTasks();
+            currentPage = 1;
 
-        renderTasks(currentTasks);
+            currentTasks =
+            getFilteredTasks();
 
-    });
+            renderTasks(currentTasks);
+
+        }
+    );
+
+});
 
 document
-    .getElementById("priorityFilter")
-    .addEventListener("change", () => {
+.querySelectorAll(
+    "#priorityMenu input"
+)
+.forEach(checkbox => {
 
-        currentPage = 1;
+    checkbox.addEventListener(
+        "change",
+        () => {
 
-        currentTasks = getFilteredTasks();
+            currentPage = 1;
 
-        renderTasks(currentTasks);
+            currentTasks =
+            getFilteredTasks();
 
-    });
+            renderTasks(currentTasks);
 
+        }
+    );
+
+});
 
 document
     .getElementById("sortSelect")
@@ -685,11 +825,13 @@ document
 
 function updateSummary(tasks) {
 
-    let total = tasks.length;
-
     let todo = 0;
     let progress = 0;
     let completed = 0;
+
+    let high = 0;
+    let medium = 0;
+    let low = 0;
 
     tasks.forEach(task => {
 
@@ -704,13 +846,41 @@ function updateSummary(tasks) {
         else if (task.status === "DONE") {
             completed++;
         }
+
+        if (task.priority === "HIGH") {
+            high++;
+        }
+
+        else if (task.priority === "MEDIUM") {
+            medium++;
+        }
+
+        else if (task.priority === "LOW") {
+            low++;
+        }
     });
 
-    document.getElementById("totalTasks").textContent = total;
     document.getElementById("todoTasks").textContent = todo;
     document.getElementById("progressTasks").textContent = progress;
     document.getElementById("completedTasks").textContent = completed;
+    document.getElementById("highTasks").textContent = high;
+    document.getElementById("mediumTasks").textContent = medium;
+    document.getElementById("lowTasks").textContent = low;
 }
+
+document.addEventListener("click", (event) => {
+
+    if (
+        !categoryBtn.contains(event.target)
+        &&
+        !categoryMenu.contains(event.target)
+    ) {
+
+        categoryMenu.classList.remove("show");
+
+    }
+
+});
 // const tasksTableBody = document.getElementById("tasksTableBody");
 
 // const tasks = [

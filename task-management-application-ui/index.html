@@ -33,30 +33,9 @@
 
             </div>
 
-            <div class="middle-section">
-
-                <h2 id="tasks-btn" class="menu-item active-menu">
-                    <img src="tasks.svg" class="icon2">
-
-                    <span>Dashboard</span>
-                </h2>
-
-            </div>
-
-
             <div class="summary-section">
 
-                <h2>Summary</h2>
-
-                <div class="status">
-
-                    <div class="dot total"></div>
-
-                    <p class="text">Total Tasks</p>
-
-                    <span id="totalTasks">0</span>
-
-                </div>
+                <h4>Summary By Status</h4>
 
 
                 <div class="status">
@@ -93,6 +72,42 @@
 
             </div>
 
+            <div class="summary-section priority-summary">
+
+                <h4>Summary By Priority</h4>
+
+                <div class="status">
+
+                    <div class="dot high"></div>
+
+                    <p class="text">High</p>
+
+                    <span id="highTasks">0</span>
+
+                </div>
+
+                <div class="status">
+
+                    <div class="dot medium"></div>
+
+                    <p class="text">Medium</p>
+
+                    <span id="mediumTasks">0</span>
+
+                </div>
+
+                <div class="status">
+
+                    <div class="dot low"></div>
+
+                    <p class="text">Low</p>
+
+                    <span id="lowTasks">0</span>
+
+                </div>
+
+            </div>
+
         </div>
 
 
@@ -122,54 +137,6 @@
 
                     </div>
 
-                    <select id="categoryFilter">
-                        <option value="ALL">Category</option>
-                        <option value="Backend">Backend</option>
-                        <option value="Frontend">Frontend</option>
-                        <option value="Database">Database</option>
-                        <option value="Testing">Testing</option>
-                        <option value="DevOps">DevOps</option>
-                        <option value="Other">Other</option>
-                    </select>
-
-                    <select id="statusFilter">
-                        <option value="ALL">Status</option>
-                        <option value="TO_DO">To Do</option>
-                        <option value="IN_PROGRESS">In Progress</option>
-                        <option value="DONE">Done</option>
-                    </select>
-
-                    <select id="priorityFilter">
-                        <option value="ALL">Priority</option>
-                        <option value="HIGH">High</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="LOW">Low</option>
-                    </select>
-
-                    </select>
-
-
-                    <select id="sortSelect">
-
-                        <option value="">Sort By</option>
-
-                        <option value="nameAsc">Task Name (A-Z)</option>
-                        <option value="nameDesc">Task Name (Z-A)</option>
-
-                        <option value="categoryAsc">Category (A-Z)</option>
-                        <option value="categoryDesc">Category (Z-A)</option>
-
-                        <option value="dateAsc">Due Date (Earliest)</option>
-                        <option value="dateDesc">Deu Date (Latest)</option>
-
-                        <option value="statusAsc">Status (A-Z)</option>
-                        <option value="statusDesc">Status (Z-A)</option>
-
-                        <option value="priorityHighLow">Priority (High-Low)</option>
-                        <option value="priorityLowHigh">Priority (Low-High)</option>
-
-                    </select>
-
                     <button class="add-task-btn" id="openModal">
 
                         <img src="plus-large-svgrepo-com.svg" class="btn-icon">
@@ -181,6 +148,130 @@
                 </div>
 
             </div>
+
+            <div class="filter-row">
+
+                <div class="filter-dropdown">
+
+                    <button type="button" id="categoryBtn" class="filter-btn">
+                        Category
+                    </button>
+
+                    <div id="categoryMenu" class="dropdown-menu">
+
+                        <label>
+                            <input type="checkbox" value="Backend">
+                            Backend
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Frontend">
+                            Frontend
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Database">
+                            Database
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Testing">
+                            Testing
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="DevOps">
+                            DevOps
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Other">
+                            Other
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="filter-dropdown">
+
+                <button id="statusBtn" class="filter-btn">
+                    Status
+                </button>
+
+                <div id="statusMenu" class="dropdown-menu">
+
+                    <label>
+                        <input type="checkbox" value="TO_DO">
+                        To Do
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="IN_PROGRESS">
+                        In Progress
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="DONE">
+                        Done
+                    </label>
+
+                </div>
+
+                </div>
+
+                <div class="filter-dropdown">
+
+                <button id="priorityBtn" class="filter-btn">
+                    Priority
+                </button>
+
+                <div id="priorityMenu" class="dropdown-menu">
+
+                    <label>
+                        <input type="checkbox" value="HIGH">
+                        High
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="MEDIUM">
+                        Medium
+                    </label>
+
+                    <label>
+                        <input type="checkbox" value="LOW">
+                        Low
+                    </label>
+
+                </div>
+
+                </div>
+
+
+                <select id="sortSelect">
+
+                    <option value="">Sort By</option>
+
+                    <option value="nameAsc">Task Name (A-Z)</option>
+                    <option value="nameDesc">Task Name (Z-A)</option>
+
+                    <option value="categoryAsc">Category (A-Z)</option>
+                    <option value="categoryDesc">Category (Z-A)</option>
+
+                    <option value="dateAsc">Due Date (Earliest)</option>
+                    <option value="dateDesc">Deu Date (Latest)</option>
+
+                    <option value="statusAsc">Status (A-Z)</option>
+                    <option value="statusDesc">Status (Z-A)</option>
+
+                    <option value="priorityHighLow">Priority (High-Low)</option>
+                    <option value="priorityLowHigh">Priority (Low-High)</option>
+
+                </select>
+
+            </div>
+
+
 
 
             <div class="table-section">
@@ -233,7 +324,7 @@
 
                             <td>
 
-                                <span class="status-pill progress-pill">
+                                <span class="status-pill ${getStatusClass(task.status)}">
 
                                     In Progress
 
@@ -243,7 +334,7 @@
 
                             <td>
 
-                                <span class="priority-pill high-pill">
+                                <span class="priority-pill ${getPriorityClass(task.priority)}">
 
                                     High
 

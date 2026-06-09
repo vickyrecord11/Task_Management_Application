@@ -282,6 +282,9 @@ const categoryMenu =
 
 categoryBtn.addEventListener("click", () => {
 
+    statusMenu.classList.remove("show");
+    priorityMenu.classList.remove("show");
+
     categoryMenu.classList.toggle("show");
 
 });
@@ -293,6 +296,9 @@ const statusMenu =
 document.getElementById("statusMenu");
 
 statusBtn.addEventListener("click", () => {
+
+    categoryMenu.classList.remove("show");
+    priorityMenu.classList.remove("show");
 
     statusMenu.classList.toggle("show");
 
@@ -306,7 +312,35 @@ document.getElementById("priorityMenu");
 
 priorityBtn.addEventListener("click", () => {
 
+    categoryMenu.classList.remove("show");
+    statusMenu.classList.remove("show");
+
     priorityMenu.classList.toggle("show");
+
+});
+
+document.addEventListener("click", (event) => {
+
+    if (
+        !categoryBtn.contains(event.target) &&
+        !categoryMenu.contains(event.target)
+    ) {
+        categoryMenu.classList.remove("show");
+    }
+
+    if (
+        !statusBtn.contains(event.target) &&
+        !statusMenu.contains(event.target)
+    ) {
+        statusMenu.classList.remove("show");
+    }
+
+    if (
+        !priorityBtn.contains(event.target) &&
+        !priorityMenu.contains(event.target)
+    ) {
+        priorityMenu.classList.remove("show");
+    }
 
 });
 

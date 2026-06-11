@@ -300,7 +300,7 @@ h1 {
 
     padding: 12px 16px;
 
-    width: 495px;
+    flex: 5;
 
 }
 
@@ -385,7 +385,7 @@ h1 {
 }
 
 .filter-btn{
-    width: 180px;
+    flex: 1;
     height: 40px;
     display: flex;
     justify-content: space-between;
@@ -406,7 +406,7 @@ h1 {
     top: 45px;
     left: 0;
 
-    width: 192px;
+    flex: 1;
 
     background: white;
 

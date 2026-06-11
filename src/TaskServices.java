@@ -73,4 +73,21 @@ public class TaskServices {
     public List<Task> getAllTasks() {
         return repository.getAllTasks();
     }
+
+    public List<Task> getTasksByPage(int page, int size) {
+
+    List<Task> tasks = repository.getAllTasks();
+
+    int startIndex = (page - 1) * size;
+
+    int endIndex = Math.min(
+            startIndex + size,
+            tasks.size());
+
+    if (startIndex >= tasks.size()) {
+        return List.of();
+    }
+
+    return tasks.subList(startIndex, endIndex);
+}
 }

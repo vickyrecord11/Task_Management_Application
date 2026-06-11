@@ -33,8 +33,23 @@ public class TaskHandler implements HttpHandler {
 
             switch (method) {
                 case "GET":
-                    handleGet(exchange);
+
+                    String query = exchange.getRequestURI()
+                            .getQuery();
+
+                    if (query != null &&
+                            query.contains("page")) {
+
+                        handleGet(exchange);
+
+                    } else {
+
+                        handleGetAll(exchange);
+
+                    }
+
                     break;
+                    
                 case "POST":
                     handlePost(exchange);
                     break;
@@ -54,11 +69,90 @@ public class TaskHandler implements HttpHandler {
         }
     }
 
-    private void handleGet(HttpExchange exchange) throws IOException {
+    private void handleGet(HttpExchange exchange)
+            throws IOException {
+
+        String query = exchange.getRequestURI().getQuery();
+
+        int page = 1;
+        int size = 5;
+
+        if (query != null) {
+
+            String[] params = query.split("&");
+
+            for (String param : params) {
+
+                String[] pair = param.split("=");
+
+                if (pair.length != 2)
+                    continue;
+
+                if (pair[0].equals("page")) {
+
+                    page = Integer.parseInt(pair[1]);
+
+                }
+
+                if (pair[0].equals("size")) {
+
+                    size = Integer.parseInt(pair[1]);
+
+                }
+            }
+        }
+
+        List<Task> tasks = App.service.getTasksByPage(
+                page,
+                size);
+
+        JsonObject response = new JsonObject();
+
+        response.addProperty(
+                "status",
+                200);
+
+        response.addProperty(
+                "message",
+                "Tasks fetched");
+
+        response.add(
+                "data",
+                gson.toJsonTree(tasks));
+
+        response.addProperty(
+                "totalCount",
+                App.service.getAllTasks().size());
+
+        String json = response.toString();
+
+        exchange.getResponseHeaders()
+                .set(
+                        "Content-Type",
+                        "application/json");
+
+        exchange.sendResponseHeaders(
+                200,
+                json.getBytes().length);
+
+        OutputStream os = exchange.getResponseBody();
+
+        os.write(json.getBytes());
+
+        os.close();
+    }
+
+    private void handleGetAll(
+            HttpExchange exchange)
+            throws IOException {
 
         List<Task> tasks = App.service.getAllTasks();
 
-        sendJson(exchange, 200, "Tasks fetched", tasks);
+        sendJson(
+                exchange,
+                200,
+                "Tasks fetched",
+                tasks);
     }
 
     private void handlePost(HttpExchange exchange) throws IOException {
@@ -98,18 +192,18 @@ public class TaskHandler implements HttpHandler {
         JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
 
         if (!obj.has("id")
-        || !obj.has("name")
-        || !obj.has("category")
-        || !obj.has("description")
-        || !obj.has("priority")
-        || !obj.has("dueDate")
-        || !obj.has("status")) {
+                || !obj.has("name")
+                || !obj.has("category")
+                || !obj.has("description")
+                || !obj.has("priority")
+                || !obj.has("dueDate")
+                || !obj.has("status")) {
 
-    sendJson(exchange, 400,
-            "Missing required fields", null);
+            sendJson(exchange, 400,
+                    "Missing required fields", null);
 
-    return;
-}
+            return;
+        }
 
         int id = obj.get("id").getAsInt();
         String name = obj.get("name").getAsString();

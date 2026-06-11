@@ -159,9 +159,33 @@ let currentPage = 1;
 const tasksPerPage = 5;
 let currentTasks = [];
 
-function loadTasks() {
+function loadAllTasks() {
 
-    fetch("http://localhost:8000/tasks")
+    fetch(
+        "http://localhost:8000/tasks"
+    )
+
+        .then(response =>
+            response.json())
+
+        .then(result => {
+
+            window.allTasks =
+                result.data;
+
+            updateSummary(
+                window.allTasks
+            );
+
+        });
+
+}
+
+function loadPageTasks() {
+
+    fetch(
+        `http://localhost:8000/tasks?page=${currentPage}&size=${tasksPerPage}`
+    )
 
         .then(response => response.json())
 
@@ -171,15 +195,26 @@ function loadTasks() {
 
             window.tasksData = tasks;
 
+            window.totalTaskCount =
+                result.totalCount;
+
             currentTasks = tasks;
 
             renderTasks(currentTasks);
 
-            updateSummary(tasks);
-
         });
 }
-loadTasks();
+loadAllTasks();
+
+loadPageTasks();
+
+function resetToPaginatedView() {
+
+    currentPage = 1;
+
+    loadPageTasks();
+
+}
 
 function renderTasks(tasks) {
 
@@ -193,7 +228,7 @@ function renderTasks(tasks) {
 
     const endIndex = startIndex + tasksPerPage;
 
-    const paginatedTasks = tasks.slice(startIndex, endIndex);
+    // const paginatedTasks = tasks.slice(startIndex, endIndex);
 
     document.getElementById("pageNumber")
         .textContent = currentPage;
@@ -202,13 +237,13 @@ function renderTasks(tasks) {
         startIndex + 1;
 
     const endTask =
-        Math.min(endIndex, tasks.length);
+        Math.min(endIndex, window.totalTaskCount);
 
     document.getElementById("taskCount")
         .textContent =
-        `Showing ${startTask} to ${endTask} of ${tasks.length} tasks`;
+        `Showing ${startTask} to ${endTask} of ${window.totalTaskCount} tasks`;
 
-    paginatedTasks.forEach((task, index) => {
+    tasks.forEach((task, index) => {
 
         let row = tasksTableBody.insertRow();
 
@@ -290,10 +325,10 @@ categoryBtn.addEventListener("click", () => {
 });
 
 const statusBtn =
-document.getElementById("statusBtn");
+    document.getElementById("statusBtn");
 
 const statusMenu =
-document.getElementById("statusMenu");
+    document.getElementById("statusMenu");
 
 statusBtn.addEventListener("click", () => {
 
@@ -305,10 +340,10 @@ statusBtn.addEventListener("click", () => {
 });
 
 const priorityBtn =
-document.getElementById("priorityBtn");
+    document.getElementById("priorityBtn");
 
 const priorityMenu =
-document.getElementById("priorityMenu");
+    document.getElementById("priorityMenu");
 
 priorityBtn.addEventListener("click", () => {
 
@@ -470,7 +505,9 @@ document.addEventListener("click", function (event) {
         method: "DELETE"
     })
         .then(() => {
-            loadTasks();
+            loadAllTasks();
+
+            loadPageTasks();
         });
 
 });
@@ -569,7 +606,9 @@ document.querySelector(".save-btn")
 
                     modal.style.display = "none";
 
-                    loadTasks();
+                    loadAllTasks();
+
+                    loadPageTasks();
 
                 });
 
@@ -592,7 +631,9 @@ document.querySelector(".save-btn")
 
                     modal.style.display = "none";
 
-                    loadTasks();
+                    loadAllTasks();
+
+                    loadPageTasks();
                 });
         }
 
@@ -600,7 +641,7 @@ document.querySelector(".save-btn")
 
 function getFilteredTasks() {
 
-    let filteredTasks = [...window.tasksData];
+    let filteredTasks = [...window.allTasks];
 
     const searchText = document.getElementById("searchInput").value.toLowerCase();
 
@@ -664,11 +705,33 @@ document
     .getElementById("searchInput")
     .addEventListener("input", function () {
 
+        const searchText =
+            document.getElementById(
+                "searchInput"
+            ).value.trim();
+
+        if (
+            searchText === ""
+            &&
+            getSelectedCategories().length === 0
+            &&
+            getSelectedStatuses().length === 0
+            &&
+            getSelectedPriorities().length === 0
+        ) {
+
+            resetToPaginatedView();
+
+            return;
+        }
+
         currentPage = 1;
 
-        currentTasks = getFilteredTasks();
+        currentTasks =
+            getFilteredTasks();
 
         renderTasks(currentTasks);
+
     });
 
 document
@@ -680,6 +743,23 @@ document
         checkbox.addEventListener(
             "change",
             () => {
+
+                if (
+                    document.getElementById(
+                        "searchInput"
+                    ).value.trim() === ""
+                    &&
+                    getSelectedCategories().length === 0
+                    &&
+                    getSelectedStatuses().length === 0
+                    &&
+                    getSelectedPriorities().length === 0
+                ) {
+
+                    resetToPaginatedView();
+
+                    return;
+                }
 
                 currentPage = 1;
 
@@ -694,48 +774,82 @@ document
     });
 
 document
-.querySelectorAll(
-    "#statusMenu input"
-)
-.forEach(checkbox => {
+    .querySelectorAll(
+        "#statusMenu input"
+    )
+    .forEach(checkbox => {
 
-    checkbox.addEventListener(
-        "change",
-        () => {
+        checkbox.addEventListener(
+            "change",
+            () => {
 
-            currentPage = 1;
+                if (
+                    document.getElementById(
+                        "searchInput"
+                    ).value.trim() === ""
+                    &&
+                    getSelectedCategories().length === 0
+                    &&
+                    getSelectedStatuses().length === 0
+                    &&
+                    getSelectedPriorities().length === 0
+                ) {
 
-            currentTasks =
-            getFilteredTasks();
+                    resetToPaginatedView();
 
-            renderTasks(currentTasks);
+                    return;
+                }
 
-        }
-    );
+                currentPage = 1;
 
-});
+                currentTasks =
+                    getFilteredTasks();
+
+                renderTasks(currentTasks);
+
+            }
+        );
+
+    });
 
 document
-.querySelectorAll(
-    "#priorityMenu input"
-)
-.forEach(checkbox => {
+    .querySelectorAll(
+        "#priorityMenu input"
+    )
+    .forEach(checkbox => {
 
-    checkbox.addEventListener(
-        "change",
-        () => {
+        checkbox.addEventListener(
+            "change",
+            () => {
 
-            currentPage = 1;
+                if (
+                    document.getElementById(
+                        "searchInput"
+                    ).value.trim() === ""
+                    &&
+                    getSelectedCategories().length === 0
+                    &&
+                    getSelectedStatuses().length === 0
+                    &&
+                    getSelectedPriorities().length === 0
+                ) {
 
-            currentTasks =
-            getFilteredTasks();
+                    resetToPaginatedView();
 
-            renderTasks(currentTasks);
+                    return;
+                }
 
-        }
-    );
+                currentPage = 1;
 
-});
+                currentTasks =
+                    getFilteredTasks();
+
+                renderTasks(currentTasks);
+
+            }
+        );
+
+    });
 
 document
     .getElementById("sortSelect")
@@ -833,13 +947,13 @@ document
     .addEventListener("click", () => {
 
         const totalPages =
-            Math.ceil(currentTasks.length / tasksPerPage);
+            Math.ceil(window.totalTaskCount / tasksPerPage);
 
         if (currentPage < totalPages) {
 
             currentPage++;
 
-            renderTasks(currentTasks);
+            loadPageTasks();
 
         }
     });
@@ -852,7 +966,7 @@ document
 
             currentPage--;
 
-            renderTasks(currentTasks);
+            loadPageTasks();
 
         }
     });

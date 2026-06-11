@@ -75,7 +75,7 @@ public class TaskHandler implements HttpHandler {
         String query = exchange.getRequestURI().getQuery();
 
         int page = 1;
-        int size = 5;
+        int size = 7;
 
         if (query != null) {
 

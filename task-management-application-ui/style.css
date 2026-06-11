@@ -472,6 +472,39 @@ h1 {
     border-color: #2563eb;
 }
 
+#resetFiltersBtn {
+
+    padding: 10px 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #f44336;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+#resetFiltersBtn:hover {
+
+    background-color: #d32f2f;
+
+    transform: translateY(-1px);
+}
+
+#resetFiltersBtn:active {
+
+    transform: translateY(0);
+}
+
 
 .table-section {
 

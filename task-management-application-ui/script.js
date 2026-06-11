@@ -156,7 +156,7 @@
 //         "block";
 // }
 let currentPage = 1;
-const tasksPerPage = 5;
+const tasksPerPage = 7;
 let currentTasks = [];
 
 function loadAllTasks() {
@@ -211,6 +211,8 @@ loadPageTasks();
 function resetToPaginatedView() {
 
     currentPage = 1;
+
+    currentTasks = [];
 
     loadPageTasks();
 
@@ -700,6 +702,31 @@ function getFilteredTasks() {
     return filteredTasks;
 
 }
+
+function resetFilters() {
+
+    document.getElementById("searchInput").value = "";
+
+    document
+        .querySelectorAll(
+            "#categoryMenu input, #statusMenu input, #priorityMenu input"
+        )
+        .forEach(input => {
+            input.checked = false;
+        });
+
+    document.getElementById("sortSelect").selectedIndex = 0;
+
+    categoryMenu.classList.remove("show");
+    statusMenu.classList.remove("show");
+    priorityMenu.classList.remove("show");
+
+    resetToPaginatedView();
+}
+
+document
+    .getElementById("resetFiltersBtn")
+    .addEventListener("click", resetFilters);
 
 document
     .getElementById("searchInput")
